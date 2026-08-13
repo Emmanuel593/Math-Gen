@@ -47,7 +47,6 @@
             max-width: 1050px;
         }
 
-        /* Enhanced Dashboard Header with Visual Flair */
         header {
             text-align: center;
             margin-bottom: 35px;
@@ -153,23 +152,34 @@
             box-sizing: border-box;
             resize: vertical;
             font-family: inherit;
+            white-space: pre-wrap;
         }
 
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            cursor: pointer;
+        /* Toggle Button Grid for Clean UI without Dropdowns */
+        .toggle-btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .feature-toggle-btn {
+            background-color: #1f2937;
+            border: 2px solid var(--border);
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
         }
 
-        .checkbox-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--accent);
-            cursor: pointer;
+        .feature-toggle-btn.active {
+            background-color: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent);
+            color: #93c5fd;
         }
 
         .upload-dropzone {
@@ -233,13 +243,13 @@
             display: none;
         }
 
-        /* Highly Styled Print Header */
+        /* Highly Styled Print Header with Assignment Title Prominent */
         .print-header-block {
             display: none;
             border-bottom: 3px solid #1e293b;
             padding-bottom: 16px;
             margin-bottom: 20px;
-            background: #f8fafc;
+            background: #ffffff;
             padding: 15px;
             border-radius: 8px;
         }
@@ -262,7 +272,6 @@
             break-inside: avoid;
         }
 
-        /* Cabinet Folders - Highly polished print aesthetics with bold contrast borders */
         .cabinet-folder {
             background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
             border: 2px solid #374151;
@@ -382,18 +391,30 @@
             break-inside: avoid;
         }
 
+        /* Enhanced High-Pizzazz Cover / Divider Page */
         .divider-page {
             display: none;
             page-break-before: always;
-            height: 90vh;
-            border: 6px solid #1e3a8a;
-            padding: 40px;
+            height: 92vh;
+            border: 8px double #1e3a8a;
+            border-radius: 16px;
+            padding: 50px;
             text-align: center;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            background: #f8fafc;
+            background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
             color: #0f172a;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .divider-page::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 12px;
+            background: linear-gradient(90deg, #3b82f6, #f59e0b, #10b981, #6366f1);
         }
 
         .quick-cut-sheet {
@@ -455,11 +476,15 @@
             header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header, .formula-flyout-btn { display: none !important; }
             .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; }
             .print-header-block { display: block !important; border: 2px solid #0f172a !important; background: #ffffff !important; }
-            .scratchpad-area { display: block !important; }
-            .divider-page { display: flex !important; }
-            .quick-cut-sheet { display: block !important; }
             
-            /* High-Contrast Standout Print Enhancements */
+            /* Controlled via toggle states during print */
+            body.print-scratchpad-on .scratchpad-area { display: block !important; }
+            body.print-scratchpad-off .scratchpad-area { display: none !important; }
+            body.print-quickcut-on .quick-cut-sheet { display: block !important; }
+            body.print-quickcut-off .quick-cut-sheet { display: none !important; }
+            
+            .divider-page { display: flex !important; }
+            
             .cabinet-folder { 
                 padding: 12px 14px 12px 32px !important; 
                 background: #ffffff !important; 
@@ -493,7 +518,7 @@
         }
     </style>
 </head>
-<body>
+<body class="print-scratchpad-off print-quickcut-off">
 
 <button class="formula-flyout-btn" onclick="toggleFormulaSidebar()">Algebra 2 Formulas</button>
 <div class="formula-sidebar" id="formulaSidebar">
@@ -514,7 +539,7 @@
         <h1>MathGen Elite Engine</h1>
         <p>Algebra 2 Study Suite & Print Vault</p>
         <div class="dashboard-badge-row">
-            <span class="dash-chip">✨ Crystal Clear Explanations</span>
+            <span class="dash-chip">✨ 5th-Grade Simple Explanations</span>
             <span class="dash-chip">🎯 Zero-Orphan Print Engine</span>
             <span class="dash-chip">⚡ Powered by Gemini 3.5</span>
         </div>
@@ -537,7 +562,7 @@
             </div>
             <div>
                 <label for="assignmentTitle">Assignment Title</label>
-                <input type="text" id="assignmentTitle" placeholder="Problem Set 4">
+                <input type="text" id="assignmentTitle" value="Problem Set 4">
             </div>
         </div>
 
@@ -547,40 +572,23 @@
                 <select id="printDensity" onchange="applyDensityMode()">
                     <option value="compact">Compact (Optimized for 90% Scale)</option>
                     <option value="standard">Standard Print Mode</option>
-                    <option value="large">Large Print (High Legibility)</option>
-                </select>
-            </div>
-            <div>
-                <label for="includeQuickCut">Quick-Cut Formula Cheat Cards</label>
-                <select id="includeQuickCut">
-                    <option value="no">Exclude</option>
-                    <option value="yes">Include at Bottom of Printout</option>
+                    <option value="large" selected>Large Print (High Legibility)</option>
                 </select>
             </div>
         </div>
 
-        <div class="config-grid">
-            <div>
-                <label for="includeScratchpad">Printable Scratchpad Area</label>
-                <select id="includeScratchpad">
-                    <option value="no">Exclude</option>
-                    <option value="yes">Include at Bottom of Printout</option>
-                </select>
-            </div>
+        <!-- Clean Button Toggle Grid (Replacing Dropdowns) -->
+        <label>Extra Study Elements</label>
+        <div class="toggle-btn-grid">
+            <button type="button" class="feature-toggle-btn active" id="btnConceptMap" onclick="toggleFeature('conceptMap')">✨ Concept Map & Logic Flow</button>
+            <button type="button" class="feature-toggle-btn" id="btnQuickCut" onclick="toggleFeature('quickCut')">✂️ Quick-Cut Cheat Cards</button>
+            <button type="button" class="feature-toggle-btn" id="btnScratchpad" onclick="toggleFeature('scratchpad')">📝 Printable Scratchpad</button>
+            <button type="button" class="feature-toggle-btn" id="btnEcoInk" onclick="toggleFeature('ecoInk')">🖨️ Eco-Ink Saver Mode</button>
         </div>
 
         <div class="control-group">
             <label for="problemInput">Paste Your Algebra 2 Problem Set or Raw Text</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste polynomials, quadratics, systems of equations, or log problems here..."></textarea>
-        </div>
-
-        <div class="checkbox-group">
-            <input type="checkbox" id="includeConceptMap" checked>
-            <label for="includeConceptMap" style="display:inline; margin:0; cursor:pointer;">Generate Visual Concept Map & Logic Flowchart</label>
-        </div>
-        <div class="checkbox-group">
-            <input type="checkbox" id="includeEcoInk" onchange="toggleEcoInkMode()">
-            <label for="includeEcoInk" style="display:inline; margin:0; cursor:pointer;">Eco-Ink Saver Mode (High-contrast background striping)</label>
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste polynomials, quadratics, systems, or logs here. Original spacing and formatting are fully preserved..."></textarea>
         </div>
 
         <div class="control-group">
@@ -598,9 +606,18 @@
         <button class="btn-primary" onclick="solveProblemAI()">Open The Answer Cabinet & Build Study Suite</button>
     </div>
 
+    <!-- Enhanced Pizzazz Cover Page -->
     <div class="divider-page" id="binderDividerPage">
-        <h1 style="font-size: 3rem; margin:0 0 15px 0; color:#1e3a8a;" id="dividerTitleText">ALGEBRA 2</h1>
-        <p style="font-size: 1.3rem; color:#475569;" id="dividerSubtitleText">Verified Study Sheets & Reference Vault</p>
+        <div style="background: rgba(30, 58, 138, 0.1); border: 2px solid #1e3a8a; padding: 12px 25px; border-radius: 30px; margin-bottom: 25px;">
+            <span style="font-size: 1.1rem; font-weight: 800; color: #1e3a8a; letter-spacing: 0.1em;" id="coverClassName">ALGEBRA 2 STUDY SUITE</span>
+        </div>
+        <h1 style="font-size: 3.5rem; margin:0 0 15px 0; color:#0f172a; letter-spacing: -0.03em;" id="coverAssignmentTitle">Problem Set</h1>
+        <p style="font-size: 1.3rem; color:#475569; max-width: 600px; margin: 0 auto 30px auto;" id="coverSubtitleText">Crystal Clear Solutions & Step-by-Step Logic Vault</p>
+        <div style="display: flex; gap: 20px; font-weight: 600; color: #334155; font-size: 1.05rem;">
+            <span>Student: <strong id="coverStudentName">Emmanuel Bazikian</strong></span>
+            <span>•</span>
+            <span>Date: <strong id="coverDate"></strong></span>
+        </div>
     </div>
 
     <div class="card output-section" id="outputSection">
@@ -610,12 +627,12 @@
         </div>
 
         <div class="print-header-block" id="printHeaderBlock">
+            <div style="font-size: 1.4rem; font-weight: 900; color: #0f172a; margin-bottom: 8px;" id="lblAssignmentTitle"></div>
             <div class="print-header-grid">
                 <div><strong>Name:</strong> <span id="lblStudentName"></span></div>
                 <div><strong>Class:</strong> <span id="lblClassName"></span></div>
                 <div><strong>Date:</strong> <span id="lblDate"></span></div>
             </div>
-            <div style="margin-top: 8px; font-size: 1.1rem; font-weight: bold; color: #1e3a8a;" id="lblAssignmentTitle"></div>
         </div>
 
         <div id="conceptMapContainer"></div>
@@ -634,7 +651,7 @@
 
         <div class="scratchpad-area" id="scratchpadArea">
             <h4 style="margin:0 0 10px 0; color:#475569; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em;">Scratchpad & Manual Working Space</h4>
-            <div style="height: 100px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;"></div>
+            <div style="height: 120px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;"></div>
         </div>
 
         <div class="action-row" style="margin-top:25px; display:flex; flex-wrap:wrap; gap:10px;">
@@ -650,7 +667,9 @@
     window.onload = function() {
         const savedKey = localStorage.getItem('gemini_math_key');
         if (savedKey) document.getElementById('apiKeyInput').value = savedKey;
-        document.getElementById('lblDate').innerText = new Date().toLocaleDateString();
+        const dateStr = new Date().toLocaleDateString();
+        document.getElementById('lblDate').innerText = dateStr;
+        document.getElementById('coverDate').innerText = dateStr;
     }
 
     function saveApiKey() {
@@ -659,6 +678,33 @@
 
     function toggleFormulaSidebar() {
         document.getElementById('formulaSidebar').classList.toggle('open');
+    }
+
+    // Toggle States for Feature Buttons
+    const featureStates = {
+        conceptMap: true,
+        quickCut: false,
+        scratchpad: false,
+        ecoInk: false
+    };
+
+    function toggleFeature(featureName) {
+        featureStates[featureName] = !featureStates[featureName];
+        const btn = document.getElementById('btn' + featureName.charAt(0).toUpperCase() + featureName.slice(1));
+        
+        if (featureStates[featureName]) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+
+        if (featureName === 'ecoInk') {
+            if (featureStates.ecoInk) {
+                document.body.classList.add('eco-ink-mode');
+            } else {
+                document.body.classList.remove('eco-ink-mode');
+            }
+        }
     }
 
     let uploadedFilePayload = null;
@@ -700,14 +746,6 @@
                     throwOnError: false
                 });
             } catch (err) { console.warn(err); }
-        }
-    }
-
-    function toggleEcoInkMode() {
-        if (document.getElementById('includeEcoInk').checked) {
-            document.body.classList.add('eco-ink-mode');
-        } else {
-            document.body.classList.remove('eco-ink-mode');
         }
     }
 
@@ -802,81 +840,94 @@
 
     async function solveProblemAI() {
         const apiKey = document.getElementById('apiKeyInput').value.trim();
-        const problemText = document.getElementById('problemInput').value.trim();
-        const wantQuickCut = document.getElementById('includeQuickCut').value === 'yes';
-        const wantScratchpad = document.getElementById('includeScratchpad').value === 'yes';
+        const problemText = document.getElementById('problemInput').value;
 
         const sName = document.getElementById('studentName').value || 'Emmanuel Bazikian';
         const cName = "Algebra 2";
         const aTitle = document.getElementById('assignmentTitle').value || 'Problem Set';
 
+        // Update cover & print titles prominently
         document.getElementById('lblStudentName').innerText = sName;
         document.getElementById('lblClassName').innerText = cName;
         document.getElementById('lblAssignmentTitle').innerText = aTitle;
-        document.getElementById('dividerTitleText').innerText = cName.toUpperCase();
-        document.getElementById('dividerSubtitleText').innerText = aTitle;
+        document.getElementById('coverAssignmentTitle').innerText = aTitle;
+        document.getElementById('coverStudentName').innerText = sName;
+
+        // Set print body classes based on toggle states
+        document.body.className = document.body.className.replace(/print-(scratch|quickcut)-(on|off)/g, '');
+        if (featureStates.ecoInk) document.body.classList.add('eco-ink-mode');
+        document.body.classList.add(featureStates.scratchpad ? 'print-scratchpad-on' : 'print-scratchpad-off');
+        document.body.classList.add(featureStates.quickCut ? 'print-quickcut-on' : 'print-quickcut-off');
+
+        document.getElementById('binderDividerPage').style.display = 'flex';
+        document.getElementById('outputSection').style.display = 'block';
+
+        const conceptMapContainer = document.getElementById('conceptMapContainer');
+        conceptMapContainer.innerHTML = featureStates.conceptMap ? `
+            <div class="concept-map-card">
+                <h4 style="margin:0 0 6px 0; color:var(--accent);">🧩 Unit Concept Flow</h4>
+                <p style="margin:0; font-size:0.9rem; color:var(--text-secondary);">Problem Breakdown $\rightarrow$ Core Algebraic Formula $\rightarrow$ Step-by-Step Isolation $\rightarrow$ Verified Solution.</p>
+            </div>
+        ` : '';
+
+        const foldersContainer = document.getElementById('cabinetFoldersContainer');
+        foldersContainer.innerHTML = `<div class="cabinet-folder"><div class="folder-tab">Problem Processing</div><div class="folder-content">Analyzing problem text with 5th-grade friendly explanations...</div></div>`;
 
         if (!apiKey) {
-            alert('Please enter your Gemini API key at the top.');
+            foldersContainer.innerHTML = `
+                <div class="cabinet-folder" style="border-left-color: #ef4444;">
+                    <div class="folder-tab" style="background: #ef4444;">API Key Required</div>
+                    <div class="folder-content">Please enter your Gemini API key at the top of the dashboard to generate live AI solutions.</div>
+                </div>
+            `;
             return;
         }
 
-        document.getElementById('cabinetFoldersContainer').innerHTML = `<div class='cabinet-folder'><div class='folder-content'>Solving Algebra 2 problems cleanly...</div></div>`;
-        document.getElementById('outputSection').style.display = 'block';
-        document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+        const systemPrompt = "You are MathGen Elite Engine powered by Gemini 3.5, an expert Algebra 2 tutor. You must explain every step as if teaching a 5th or 6th grader who finds math frustratingly complex. Use ultra-simple analogies, clear plain English, and zero confusing jargon. Preserve exact spacing and raw text formatting from the user input. Output your response as a valid JSON object with an array called 'problems', where each item has: 'problemText', 'pitfall', 'method', 'explanation', and 'finalAnswer'.";
 
-        const systemInstruction = "You are an elite Algebra 2 tutor and problem solver.\n" +
-            "CRITICAL INSTRUCTIONS:\n" +
-            "1. Solve problems strictly at the Algebra 2 level (quadratics, polynomials, rational functions, logarithms, systems of equations, complex numbers).\n" +
-            "2. Explain everything in extremely simple, plain English—so crystal clear that anyone can follow along and easily get the right answer without getting confused.\n" +
-            "3. Ensure all math formatting uses standard LaTeX syntax inside standard single dollar signs (e.g., $x^2 + 5x + 6 = 0$). DO NOT use broken symbols.\n" +
-            "4. Break every distinct problem into a separate HTML cabinet folder (<div class=\"cabinet-folder\">).\n" +
-            "5. For each problem, include:\n" +
-            "   - A problem badge (<div class=\"problem-badge\">)\n" +
-            "   - Super clear, step-by-step plain English logic\n" +
-            "   - A 'Common Pitfall / Trap' warning box (<div class=\"pitfall-alert\">)\n" +
-            "   - An alternative method breakdown (<div class=\"method-block\">)\n" +
-            "   - A verification proof block (<div class=\"verification-block\">)\n" +
-            "   - A final answer box (<div class=\"final-answer-box\">)\n" +
-            "6. If requested, generate a Visual Concept Map at the top (<div class=\"concept-map-card\">) illustrating problem logic.";
-
-        let contentsArray = [{ text: problemText || "Analyze attached Algebra 2 assignment image/PDF." }];
-        if (uploadedFilePayload) {
-            contentsArray.push({ inline_data: { mime_type: uploadedFileType, data: uploadedFilePayload } });
-        }
+        const userPrompt = `Solve the following Algebra 2 problem set with maximum simplicity and crystal-clear step-by-step breakdowns:\n\n${problemText}`;
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    system_instruction: { parts: [{ text: systemInstruction }] },
-                    contents: [{ parts: contentsArray }]
+                    contents: [{ parts: [{ text: userPrompt }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: { responseMimeType: "application/json" }
                 })
             });
 
             const data = await response.json();
-            if (data.error) throw new Error(data.error.message);
+            const rawJson = data.candidates[0].content.parts[0].text;
+            const parsedData = JSON.parse(rawJson);
 
-            let htmlOutput = data.candidates[0].content.parts[0].text;
-            htmlOutput = htmlOutput.replace(/```html/g, '').replace(/```/g, '').trim();
-
-            document.getElementById('cabinetFoldersContainer').innerHTML = htmlOutput;
-            
-            const folders = document.querySelectorAll('.cabinet-folder');
-            if (folders.length > 0) {
-                document.getElementById('quickCutSheet').style.display = wantQuickCut ? 'block' : 'none';
-                document.getElementById('scratchpadArea').style.display = wantScratchpad ? 'block' : 'none';
-                document.getElementById('binderDividerPage').style.display = 'flex';
-            }
-
+            let htmlContent = '';
+            parsedData.problems.forEach((item, index) => {
+                htmlContent += `
+                    <div class="cabinet-folder">
+                        <div class="folder-tab">Folder ${index + 1}</div>
+                        <div class="problem-badge"><strong>Problem:</strong><br><span style="white-space: pre-wrap;">${item.problemText}</span></div>
+                        <div class="pitfall-alert"><strong>⚠️ Watch Out / Pitfall:</strong> ${item.pitfall}</div>
+                        <div class="method-block"><strong>💡 Simple Strategy:</strong> ${item.method}</div>
+                        <div class="folder-content"><strong>Step-by-Step Breakdown:</strong><br><span style="white-space: pre-wrap;">${item.explanation}</span></div>
+                        <div class="final-answer-box">Final Answer: ${item.finalAnswer}</div>
+                    </div>
+                `;
+            });
+            foldersContainer.innerHTML = htmlContent;
             renderMathOnScreen();
+            applyDensityMode();
 
         } catch (err) {
-            document.getElementById('cabinetFoldersContainer').innerHTML = `<div class='cabinet-folder' style='border-color:#ef4444;'><div class='folder-content'>Error: ${err.message}</div></div>`;
+            foldersContainer.innerHTML = `
+                <div class="cabinet-folder" style="border-left-color: #ef4444;">
+                    <div class="folder-tab" style="background: #ef4444;">Processing Error</div>
+                    <div class="folder-content">Failed to generate response. Please check your API key or input format. (${err.message})</div>
+                </div>
+            `;
         }
     }
 </script>
-
 </body>
 </html>
