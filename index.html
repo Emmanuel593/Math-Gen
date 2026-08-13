@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MathGen Elite - Live AI Solver</title>
+    
+    <!-- KaTeX CSS & JavaScript for Perfect Math & Fraction Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -90,10 +96,10 @@
             border-color: var(--accent);
         }
 
-        /* Fully Reliable Universal Input Field */
+        /* High-Reliability Input Box */
         textarea.math-textarea {
             width: 100%;
-            min-height: 140px;
+            min-height: 130px;
             background-color: #1f2937;
             border: 1px solid var(--border);
             color: var(--text-primary);
@@ -208,24 +214,22 @@
         .output-box {
             background-color: #1f2937;
             border-left: 4px solid var(--success);
-            padding: 16px;
+            padding: 18px;
             border-radius: 0 10px 10px 0;
             margin-bottom: 15px;
-            font-size: 1.15rem;
+            font-size: 1.3rem;
             word-break: break-word;
-            white-space: pre-wrap;
-            font-family: inherit;
+            line-height: 1.6;
         }
 
         .explanation-box {
             background-color: #1f2937;
             padding: 20px;
             border-radius: 10px;
-            line-height: 1.7;
+            line-height: 1.8;
             display: none;
             font-size: 1.05rem;
             white-space: pre-wrap;
-            font-family: inherit;
         }
 
         .explanation-box h3 {
@@ -246,9 +250,10 @@
             .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
             header, .card:not(.output-section), .btn-primary, .action-row { display: none !important; }
             .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; padding: 0 !important; margin: 0 !important; }
-            .output-box { background: #f4f4f4 !important; color: black !important; border-left: 4px solid #10b981 !important; font-size: 1.1rem !important; }
+            .output-box { background: #f4f4f4 !important; color: black !important; border-left: 4px solid #10b981 !important; font-size: 1.2rem !important; }
             .explanation-box { background: #f9f9f9 !important; color: black !important; display: block !important; border: 1px solid #ddd !important; font-size: 1.1rem !important; }
             .explanation-box h3 { color: #111 !important; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+            .katex { color: black !important; }
         }
     </style>
 </head>
@@ -278,8 +283,8 @@
         </div>
 
         <div class="control-group">
-            <label for="problemInput">Paste Anything: Math Problems, Homework Text, Fractions, or Symbols</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here cleanly... Multi-line text, symbols, fractions, radicals, etc. won't break."></textarea>
+            <label for="problemInput">Paste Homework Text, Equations, Fractions, or Symbols</label>
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: word problems, raw LaTeX like \frac{-3 \pm 2\sqrt{6}}{5}, or unicode symbols..."></textarea>
         </div>
 
         <div class="checkbox-group">
@@ -345,6 +350,20 @@
         }
     }
 
+    function renderMathOnScreen() {
+        if (window.renderMathInElement) {
+            window.renderMathInElement(document.getElementById('outputSection'), {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    }
+
     async function solveProblemAI() {
         const apiKey = document.getElementById('apiKeyInput').value.trim();
         const problemText = document.getElementById('problemInput').value.trim();
@@ -366,13 +385,14 @@
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
-        const systemInstruction = `You are an elite ${gradeLevel} mathematics expert and tutor. Solve the provided math problem with absolute precision. 
-        Formatting instructions:
-        - Output exact clean text formatting for final answers (e.g., proper fractional notation like (-3 ± √(6)) / 5 or exact simplified forms). 
-        - Structure your step-by-step explanation with clear numbered steps, exact formulas, and clean line breaks so it reads like a pristine study guide.
-        - Respond strictly as a JSON object with two keys: "answer" and "explanation".`;
+        const systemInstruction = `You are an elite ${gradeLevel} mathematics expert and tutor. Solve the provided math problem with absolute precision.
+        Formatting rules:
+        - Format ALL math expressions, fractions, square roots, and variables inside standard LaTeX dollar signs ($...$ for inline or $$...$$ for block fractions).
+        - Always prefer exact simplified fraction and radical forms over decimals unless explicitly asked for decimals. Example: $x = \\frac{-3 \\pm 2\\sqrt{6}}{5}$.
+        - Structure your step-by-step breakdown using numbered steps and clear explanations.
+        - Respond strictly as a valid JSON object with two keys: "answer" and "explanation".`;
 
-        const userProblem = `Problem / Expression: ${problemText}`;
+        const userProblem = `Problem / Expression / Text: ${problemText}`;
 
         let contentsArray = [{ text: userProblem }];
         if (base64Image) {
@@ -403,15 +423,24 @@
             const rawJsonText = data.candidates[0].content.parts[0].text;
             const parsedResult = JSON.parse(rawJsonText);
 
-            document.getElementById('finalAnswerDisplay').innerText = parsedResult.answer;
+            // Wrap answer in math delimiters if not already wrapped
+            let formattedAnswer = parsedResult.answer;
+            if (!formattedAnswer.includes('$')) {
+                formattedAnswer = `$${formattedAnswer}$`;
+            }
+
+            document.getElementById('finalAnswerDisplay').innerHTML = formattedAnswer;
             
             const explanationCard = document.getElementById('explanationCard');
             if (wantExplanation) {
-                document.getElementById('detailedExplanation').innerText = parsedResult.explanation;
+                document.getElementById('detailedExplanation').innerHTML = parsedResult.explanation;
                 explanationCard.style.display = 'block';
             } else {
                 explanationCard.style.display = 'none';
             }
+
+            // Render all KaTeX fractions and mathematical symbols visually
+            setTimeout(renderMathOnScreen, 50);
 
         } catch (err) {
             document.getElementById('finalAnswerDisplay').innerText = "Error executing request.";
