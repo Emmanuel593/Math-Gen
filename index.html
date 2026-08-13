@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MathGen Elite - Live AI Solver</title>
     
-    <!-- KaTeX CSS & JavaScript for Perfect Math & Fraction Rendering -->
+    <!-- KaTeX for clean final answers -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -96,7 +96,6 @@
             border-color: var(--accent);
         }
 
-        /* Fully Sanitized Auto-Stripping Input Box */
         textarea.math-textarea {
             width: 100%;
             min-height: 130px;
@@ -224,12 +223,13 @@
 
         .explanation-box {
             background-color: #1f2937;
-            padding: 20px;
+            padding: 24px;
             border-radius: 10px;
             line-height: 1.8;
             display: none;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             white-space: pre-wrap;
+            font-family: inherit;
         }
 
         .explanation-box h3 {
@@ -284,7 +284,6 @@
 
         <div class="control-group">
             <label for="problemInput">Paste Homework Text, Equations, Fractions, or Symbols</label>
-            <!-- Built-in paste event listener auto-cleans invisible garbage layout code -->
             <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: word problems, equations, fractions, or symbols. Paste format issues are automatically fixed."></textarea>
         </div>
 
@@ -330,15 +329,10 @@
             document.getElementById('apiKeyInput').value = savedKey;
         }
 
-        // AUTO-SANITIZER: Strips bad formatting/hidden website layout code on paste
         document.getElementById('problemInput').addEventListener('paste', function (e) {
             e.preventDefault();
             const text = (e.originalEvent || e).clipboardData.getData('text/plain');
-            const selection = window.getSelection();
-            
-            // Clean weird invisible spacing or formatting artifacts
             const cleanText = text.replace(/[\u200B-\u200D\uFEFF]/g, '');
-            
             const start = this.selectionStart;
             const end = this.selectionEnd;
             this.value = this.value.substring(0, start) + cleanText + this.value.substring(end);
@@ -401,12 +395,12 @@
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
-        const systemInstruction = `You are an elite ${gradeLevel} mathematics expert and tutor. Solve the provided math problem with absolute precision.
-        Formatting rules:
-        - Format ALL math expressions, fractions, square roots, and variables inside standard LaTeX dollar signs ($...$ for inline or $$...$$ for block fractions).
-        - Always prefer exact simplified fraction and radical forms over decimals unless explicitly asked for decimals. Example: $x = \\frac{-3 \\pm 2\\sqrt{6}}{5}$.
-        - Structure your step-by-step breakdown using numbered steps and clear explanations.
-        - Respond strictly as a valid JSON object with two keys: "answer" and "explanation".`;
+        const systemInstruction = `You are an expert ${gradeLevel} math tutor helping a student who learns best with simple, plain-English explanations. 
+        CRITICAL RULES FOR EXPLANATIONS:
+        - Do NOT use raw code blocks, backslashes like \\frac or \\sqrt, or confusing programming syntax in the explanation text.
+        - Write everything out in clear, normal English sentences as if you are talking directly to a student. Use plain text formatting like "divided by" or standard fraction bars (e.g., (top / bottom)) if needed, keeping it entirely readable.
+        - Structure the explanation with clear, numbered steps (Step 1, Step 2, etc.) so it's impossible to misunderstand.
+        - Respond strictly as a valid JSON object with two keys: "answer" (can use clean math symbols) and "explanation" (strictly plain English, zero broken code).`;
 
         const userProblem = `Problem / Expression / Text: ${problemText}`;
 
@@ -448,7 +442,7 @@
             
             const explanationCard = document.getElementById('explanationCard');
             if (wantExplanation) {
-                document.getElementById('detailedExplanation').innerHTML = parsedResult.explanation;
+                document.getElementById('detailedExplanation').innerText = parsedResult.explanation;
                 explanationCard.style.display = 'block';
             } else {
                 explanationCard.style.display = 'none';
