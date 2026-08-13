@@ -521,20 +521,20 @@
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
         const instructionMode = wantExplanation 
-            ? "Write out a deeply detailed, conversational, step-by-step walkthrough explaining every single action like a human buddy sitting next to them. Never rush or skip steps. CRITICAL: Output ONLY clean HTML tags for styling like <p>, <strong>, <br>, and <ul>/<li>. DO NOT use markdown headers like '#', '##', or '###' under any circumstances. Put the final answer inside a div with class 'final-answer-box' at the very bottom." 
+            ? "Write out a deeply detailed, conversational, step-by-step walkthrough explaining every single action like a human buddy sitting next to them. Never rush or skip steps. CRITICAL: Output plain text paragraphs, dashes (-) for lists, and HTML tags like <p>, <strong>, <br> only. DO NOT use markdown headers like '#', '##', or '###' under any circumstances. Put the final answer inside a div with class 'final-answer-box' at the very bottom." 
             : "First, automatically clean up and rewrite the raw problem text. Then provide ONLY the clean final answer inside a div with class 'final-answer-box'. Do NOT include any explanations or steps.";
 
-        const systemInstruction = `You are an elite, patient mathematics and science tutor helping a student who gets easily overwhelmed.
-        CRITICAL INSTRUCTIONS:
-        - Analyze the user's input (it might contain jumbled lines, messy web text, or equations from a scanned worksheet).
-        - Automatically fix and un-jumble the text so each distinct problem is cleanly structured.
-        - For EVERY individual problem, create a separate cabinet folder.
-        - Folder title format must strictly be: "Problem 1", "Problem 2", "Problem 3", etc.
-        - You MUST include the clean, auto-fixed original problem statement clearly at the top of each folder.
-        - STRICT FORMATTING RULE: NEVER use hash symbols (#, ##, ###) anywhere in your response. 
-        - Mode requested: ${instructionMode}
-        - Handle numbers, formulas, fractions, and units accurately using LaTeX inside dollar signs.
-        - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has three keys: "title" (e.g. "Problem 1"), "problem" (the clean auto-fixed expression/question), and "summary" (containing the conversational breakdown and the final answer box).`;
+        const systemInstruction = "You are an elite, patient mathematics and science tutor helping a student who gets easily overwhelmed.\n" +
+            "CRITICAL INSTRUCTIONS:\n" +
+            "- Analyze the user's input (it might contain jumbled lines, messy web text, or equations from a scanned worksheet).\n" +
+            "- Automatically fix and un-jumble the text so each distinct problem is cleanly structured.\n" +
+            "- For EVERY individual problem, create a separate cabinet folder.\n" +
+            "- Folder title format must strictly be: 'Problem 1', 'Problem 2', 'Problem 3', etc.\n" +
+            "- You MUST include the clean, auto-fixed original problem statement clearly at the top of each folder.\n" +
+            "- STRICT FORMATTING RULE: NEVER use hash symbols (#, ##, ###) anywhere in your response.\n" +
+            "- Mode requested: " + instructionMode + "\n" +
+            "- Handle numbers, formulas, fractions, and units accurately using LaTeX inside dollar signs.\n" +
+            "- Respond strictly as a valid JSON object containing an array called 'folders', where each object in the array has three keys: 'title' (e.g. 'Problem 1'), 'problem' (the clean auto-fixed expression/question), and 'summary' (containing the conversational breakdown and the final answer box).";
 
         const userProblem = `Raw Un-formatted Input: ${problemText}`;
 
@@ -566,7 +566,6 @@
 
             let rawJsonText = data.candidates[0].content.parts[0].text;
             
-            // Clean up any stray markdown code block markers if the model accidentally includes them
             rawJsonText = rawJsonText.replace(/```json/g, '').replace(/```/g, '').trim();
             
             const parsedResult = JSON.parse(rawJsonText);
