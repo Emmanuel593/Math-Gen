@@ -257,6 +257,11 @@
             font-size: 1.6rem;
         }
 
+        /* Hidden Print-Only Title Block */
+        .print-only-title {
+            display: none;
+        }
+
         .cabinet-folder {
             background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
             border: 2px solid #374151;
@@ -296,21 +301,34 @@
             box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
         }
 
+        .qview-badge {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+        }
+
         .problem-badge {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.1));
             border: 1px solid rgba(99, 102, 241, 0.4);
-            padding: 12px 16px;
+            padding: 14px 18px;
             border-radius: 10px;
             font-weight: 600;
             color: #93c5fd;
             margin-bottom: 16px;
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .folder-content {
-            font-size: 1.05rem;
-            line-height: 1.85;
+            font-size: 1.1rem;
+            line-height: 1.9;
             color: var(--text-primary);
         }
 
@@ -321,15 +339,37 @@
             margin-top: 25px;
         }
 
-        /* Clean Print Formatting: Hidden Cabinet Header & Vibrant Color Preservation */
+        /* Clean Color Print Formatting with Official Study Sheet Header */
         @media print {
             body { background: white !important; color: black !important; padding: 0 !important; }
             .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
             header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header { display: none !important; }
             .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; padding: 0 !important; margin: 0 !important; }
+            
+            .print-only-title {
+                display: block !important;
+                text-align: center;
+                border-bottom: 3px solid #4f46e5;
+                padding-bottom: 12px;
+                margin-bottom: 25px;
+            }
+            .print-only-title h1 {
+                margin: 0;
+                font-size: 1.8rem;
+                color: #1e293b;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            .print-only-title p {
+                margin: 5px 0 0 0;
+                color: #64748b;
+                font-size: 0.95rem;
+            }
+
             .cabinet-folder { background: #ffffff !important; border: 2px solid #cbd5e1 !important; border-left: 6px solid #4f46e5 !important; color: black !important; box-shadow: none !important; margin-bottom: 25px !important; page-break-inside: avoid !important; break-inside: avoid !important; }
             .folder-tab { background: #4f46e5 !important; color: white !important; box-shadow: none !important; }
-            .problem-badge { background-color: #f1f5f9 !important; border: 1px solid #cbd5e1 !important; color: #0f172a !important; box-shadow: none !important; }
+            .qview-badge { background: #f1f5f9 !important; border: 1px solid #cbd5e1 !important; color: #475569 !important; }
+            .problem-badge { background-color: #f8fafc !important; border: 1px solid #cbd5e1 !important; color: #0f172a !important; box-shadow: none !important; }
             .folder-content { color: black !important; }
             .katex { color: black !important; }
         }
@@ -351,13 +391,12 @@
 
         <div class="control-group">
             <label for="problemInput">Paste Your Confusing Homework, Test List, or Problem Set</label>
-            <!-- Heavy-duty sanitized paste box -->
             <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: weird characters, messy web symbols, math equations, or full lists. All hidden artifacts are auto-stripped."></textarea>
         </div>
 
         <div class="checkbox-group">
             <input type="checkbox" id="includeExplanation" checked>
-            <label for="includeExplanation" style="display:inline; margin:0; cursor:pointer;">Include full step-by-step detailed explanation (Dumbass Mode)</label>
+            <label for="includeExplanation" style="display:inline; margin:0; cursor:pointer;">Include full step-by-step detailed explanation (Maximum Clarity Mode)</label>
         </div>
 
         <div class="control-group">
@@ -379,6 +418,11 @@
         <div class="cabinet-header">
             <h2>📁 The Answer Cabinet</h2>
         </div>
+
+        <div class="print-only-title">
+            <h1>Master Study Reference Sheet</h1>
+            <p>Verified Step-by-Step Problem Breakdown & Solutions</p>
+        </div>
         
         <div id="cabinetFoldersContainer">
             <!-- Dynamic Folders Inserted Here -->
@@ -397,17 +441,16 @@
             document.getElementById('apiKeyInput').value = savedKey;
         }
 
-        // FULLY BULLETPROOF PASTE SANITIZER: Strips weird unicode, hidden HTML, bad web font artifacts
+        // FULLY BULLETPROOF PASTE SANITIZER
         document.getElementById('problemInput').addEventListener('paste', function (e) {
             e.preventDefault();
             const clipboardData = e.clipboardData || window.clipboardData;
             const text = clipboardData.getData('text/plain');
             
-            // Normalize weird whitespace, invisible layout characters, and strange symbol codes
             const cleanText = text
-                .replace(/[\u200B-\u200D\uFEFF]/g, '') // Zero-width spaces
-                .replace(/\u00A0/g, ' ')                  // Non-breaking spaces to normal spaces
-                .replace(/\r\n/g, '\n');                  // Normalize line endings
+                .replace(/[\u200B-\u200D\uFEFF]/g, '')
+                .replace(/\u00A0/g, ' ')
+                .replace(/\r\n/g, '\n');
 
             const start = this.selectionStart;
             const end = this.selectionEnd;
@@ -481,15 +524,19 @@
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
-        const systemInstruction = `You are an elite mathematics tutor helping a student who wants extremely clear, dummy-proof, bite-sized explanations with zero BS.
-        CRITICAL FORMATTING INSTRUCTIONS:
+        const instructionMode = wantExplanation 
+            ? "Provide the final answer AND a deeply detailed, maximum-clarity step-by-step breakdown explaining every single operation in plain conversational English." 
+            : "Provide ONLY the clean final answer. Do NOT include any explanations, steps, or extra text.";
+
+        const systemInstruction = `You are an elite mathematics tutor helping a student organize problems into a physical filing cabinet.
+        CRITICAL INSTRUCTIONS:
         - Analyze the user's input (a single problem or list of numbered problems).
         - For EVERY individual problem, create a separate cabinet folder.
         - Folder title format must strictly be: "Problem 1", "Problem 2", "Problem 3", etc.
         - You MUST include the original problem statement or expression clearly at the top.
-        - If the user wants explanations (${wantExplanation}), provide a deeply detailed, structured breakdown using simple everyday logic. Explain every single step like you're talking to someone who needs maximum clarity. Handle any fractions, radicals, or symbols accurately using LaTeX inside dollar signs.
-        - If explanation is turned off, provide just the clean final answer.
-        - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has three keys: "title" (e.g. "Problem 1"), "problem" (the original expression/question), and "summary" (containing the final answer and the detailed explanation if enabled).`;
+        - Mode requested: ${instructionMode}
+        - Handle any fractions, radicals, or symbols accurately using LaTeX inside dollar signs.
+        - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has three keys: "title" (e.g. "Problem 1"), "problem" (the original expression/question), and "summary" (containing the answer or the full breakdown depending on the mode).`;
 
         const userProblem = `Problem / Expression / Text List: ${problemText}`;
 
@@ -534,6 +581,7 @@
                     foldersHTML += `
                         <div class="cabinet-folder">
                             <div class="folder-tab">${probTitle}</div>
+                            <div class="qview-badge">🔍 Q-View Reference Card</div>
                             <div class="problem-badge">📌 Problem: ${origProblem}</div>
                             <div class="folder-content">${folderSummary}</div>
                         </div>
