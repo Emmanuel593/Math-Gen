@@ -199,7 +199,6 @@
             display: none;
         }
 
-        /* Print Header - Cleaned with zero orphans */
         .print-header-block {
             display: none;
             border-bottom: 2px solid #333;
@@ -215,7 +214,6 @@
             color: #1e293b;
         }
 
-        /* Concept Map */
         .concept-map-card {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(14, 165, 233, 0.05));
             border: 1px solid rgba(59, 130, 246, 0.3);
@@ -226,7 +224,6 @@
             break-inside: avoid;
         }
 
-        /* Cabinet Folders - Strict Pagination Rules to prevent page splitting */
         .cabinet-folder {
             background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
             border: 2px solid #374151;
@@ -290,7 +287,6 @@
             color: var(--text-primary);
         }
 
-        /* FINAL ANSWER BOX - Locked inside the folder block so it never orphans */
         .final-answer-box {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
             border: 2px solid #10b981;
@@ -305,7 +301,6 @@
             break-inside: avoid !important;
         }
 
-        /* Quiz Mode */
         .quiz-hidden .final-answer-box {
             filter: blur(8px);
             user-select: none;
@@ -342,9 +337,10 @@
             border-radius: 10px;
             padding: 15px;
             margin-top: 20px;
-            min-height: 100px;
-            background: #fafafa;
+            background: #ffffff;
+            color: #000000;
             page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .divider-page {
@@ -361,7 +357,6 @@
             color: #0f172a;
         }
 
-        /* Quick-Cut Cards Sheet */
         .quick-cut-sheet {
             display: none;
             margin-top: 25px;
@@ -425,7 +420,6 @@
             .divider-page { display: flex !important; }
             .quick-cut-sheet { display: block !important; }
             
-            /* Strict Print Layout Controls - Zero Orphaning */
             .cabinet-folder { 
                 padding-left: 35px !important; 
                 background: #ffffff !important; 
@@ -508,8 +502,18 @@
             <div>
                 <label for="includeQuickCut">Quick-Cut Formula Cheat Cards</label>
                 <select id="includeQuickCut">
-                    <option value="yes">Include at Bottom of Printout</option>
                     <option value="no">Exclude</option>
+                    <option value="yes">Include at Bottom of Printout</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="config-grid">
+            <div>
+                <label for="includeScratchpad">Printable Scratchpad Area</label>
+                <select id="includeScratchpad">
+                    <option value="no">Exclude</option>
+                    <option value="yes">Include at Bottom of Printout</option>
                 </select>
             </div>
         </div>
@@ -577,9 +581,9 @@
             </div>
         </div>
 
-        <div class="scratchpad-area">
-            <h4 style="margin:0 0 10px 0; color:#64748b; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em;">Scratchpad & Manual Working Space</h4>
-            <div style="height: 100px;"></div>
+        <div class="scratchpad-area" id="scratchpadArea">
+            <h4 style="margin:0 0 10px 0; color:#475569; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em;">Scratchpad & Manual Working Space</h4>
+            <div style="height: 140px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;"></div>
         </div>
 
         <div class="action-row" style="margin-top:25px; display:flex; flex-wrap:wrap; gap:10px;">
@@ -749,6 +753,7 @@
         const apiKey = document.getElementById('apiKeyInput').value.trim();
         const problemText = document.getElementById('problemInput').value.trim();
         const wantQuickCut = document.getElementById('includeQuickCut').value === 'yes';
+        const wantScratchpad = document.getElementById('includeScratchpad').value === 'yes';
 
         const sName = document.getElementById('studentName').value || 'Emmanuel Bazikian';
         const cName = "Algebra 2";
@@ -772,16 +777,17 @@
         const systemInstruction = "You are an elite Algebra 2 tutor and problem solver.\n" +
             "CRITICAL INSTRUCTIONS:\n" +
             "1. Solve problems strictly at the Algebra 2 level (quadratics, polynomials, rational functions, logarithms, systems of equations, complex numbers).\n" +
-            "2. Ensure all math formatting uses standard LaTeX syntax inside standard single dollar signs (e.g., $x^2 + 5x + 6 = 0$). DO NOT use broken symbols or unsupported tags.\n" +
-            "3. Break every distinct problem into a separate HTML cabinet folder (<div class=\"cabinet-folder\">).\n" +
-            "4. For each problem, include:\n" +
+            "2. Explain everything in extremely simple, plain English—so crystal clear that anyone can follow along and easily get the right answer without getting confused.\n" +
+            "3. Ensure all math formatting uses standard LaTeX syntax inside standard single dollar signs (e.g., $x^2 + 5x + 6 = 0$). DO NOT use broken symbols.\n" +
+            "4. Break every distinct problem into a separate HTML cabinet folder (<div class=\"cabinet-folder\">).\n" +
+            "5. For each problem, include:\n" +
             "   - A problem badge (<div class=\"problem-badge\">)\n" +
-            "   - Clean step-by-step logic\n" +
+            "   - Super clear, step-by-step plain English logic\n" +
             "   - A 'Common Pitfall / Trap' warning box (<div class=\"pitfall-alert\">)\n" +
             "   - An alternative method breakdown (<div class=\"method-block\">)\n" +
             "   - A verification proof block (<div class=\"verification-block\">)\n" +
             "   - A final answer box (<div class=\"final-answer-box\">)\n" +
-            "5. If requested, generate a Visual Concept Map at the top (<div class=\"concept-map-card\">) illustrating problem logic.";
+            "6. If requested, generate a Visual Concept Map at the top (<div class=\"concept-map-card\">) illustrating problem logic.";
 
         let contentsArray = [{ text: problemText || "Analyze attached Algebra 2 assignment image/PDF." }];
         if (uploadedFilePayload) {
@@ -809,6 +815,7 @@
             const folders = document.querySelectorAll('.cabinet-folder');
             if (folders.length > 0) {
                 document.getElementById('quickCutSheet').style.display = wantQuickCut ? 'block' : 'none';
+                document.getElementById('scratchpadArea').style.display = wantScratchpad ? 'block' : 'none';
                 document.getElementById('binderDividerPage').style.display = 'flex';
             }
 
