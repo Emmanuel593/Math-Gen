@@ -42,14 +42,23 @@
         header {
             text-align: center;
             margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease-out;
         }
 
         header h1 {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             margin: 0 0 10px 0;
-            background: linear-gradient(135deg, #818cf8, #c084fc);
+            background: linear-gradient(135deg, #818cf8, #c084fc, #f43f5e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: shimmer 6s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         header p {
@@ -64,6 +73,17 @@
             padding: 24px;
             margin-bottom: 20px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .control-group {
@@ -80,7 +100,7 @@
             letter-spacing: 0.05em;
         }
 
-        select, input[type="password"] {
+        input[type="password"] {
             width: 100%;
             padding: 12px 16px;
             background-color: #1f2937;
@@ -89,12 +109,13 @@
             border-radius: 10px;
             font-size: 1rem;
             box-sizing: border-box;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        select:focus, input[type="password"]:focus {
+        input[type="password"]:focus {
             outline: none;
             border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
         }
 
         textarea.math-textarea {
@@ -110,11 +131,13 @@
             resize: vertical;
             font-family: inherit;
             line-height: 1.5;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         textarea.math-textarea:focus {
             outline: none;
             border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
         }
 
         .checkbox-group {
@@ -140,13 +163,14 @@
             padding: 20px;
             text-align: center;
             cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
             position: relative;
         }
 
         .upload-dropzone:hover {
             background-color: rgba(99, 102, 241, 0.05);
             border-color: var(--accent);
+            transform: scale(1.01);
         }
 
         .upload-dropzone input {
@@ -176,7 +200,7 @@
         }
 
         .btn-primary {
-            background-color: var(--accent);
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
             color: white;
             border: none;
             padding: 14px 24px;
@@ -185,11 +209,13 @@
             font-size: 1rem;
             cursor: pointer;
             width: 100%;
-            transition: background-color 0.2s, transform 0.1s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
         }
 
         .btn-primary:hover {
-            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.6);
         }
 
         .btn-secondary {
@@ -201,20 +227,21 @@
             font-weight: 600;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, transform 0.1s;
             margin-right: 10px;
             margin-top: 10px;
         }
 
         .btn-secondary:hover {
             background-color: #4b5563;
+            transform: translateY(-1px);
         }
 
         .output-section {
             display: none;
         }
 
-        /* File Cabinet Style Layout with Vibrant Colors */
+        /* File Cabinet Style Layout with Vibrant Colors & Smooth Entrance */
         .cabinet-header {
             display: flex;
             align-items: center;
@@ -233,21 +260,26 @@
         .cabinet-folder {
             background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
             border: 2px solid #374151;
-            border-left: 6px solid var(--accent);
+            border-left: 6px solid #6366f1;
             border-radius: 14px;
-            padding: 22px;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-            page-break-inside: avoid;
-            break-inside: avoid;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            animation: folderPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(15px);
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
         }
 
-        .cabinet-folder:nth-child(odd) {
-            border-left-color: #ec4899; /* Vibrant pink accent variant */
-        }
+        .cabinet-folder:nth-child(2) { border-left-color: #ec4899; animation-delay: 0.1s; }
+        .cabinet-folder:nth-child(3) { border-left-color: #10b981; animation-delay: 0.2s; }
+        .cabinet-folder:nth-child(4) { border-left-color: #f59e0b; animation-delay: 0.3s; }
+        .cabinet-folder:nth-child(5) { border-left-color: #3b82f6; animation-delay: 0.4s; }
+        .cabinet-folder:nth-child(n+6) { border-left-color: #a855f7; animation-delay: 0.5s; }
 
-        .cabinet-folder:nth-child(3n) {
-            border-left-color: #10b981; /* Vibrant green accent variant */
+        @keyframes folderPop {
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .folder-tab {
@@ -255,30 +287,52 @@
             background: linear-gradient(135deg, #6366f1, #a855f7);
             color: white;
             font-weight: 700;
-            padding: 6px 14px;
+            padding: 6px 16px;
             border-radius: 8px 8px 0 0;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             text-transform: uppercase;
             margin-bottom: 12px;
             letter-spacing: 0.05em;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
         }
 
         .problem-badge {
-            background-color: rgba(99, 102, 241, 0.15);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.1));
             border: 1px solid rgba(99, 102, 241, 0.4);
-            padding: 10px 14px;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border-radius: 10px;
             font-weight: 600;
             color: #93c5fd;
-            margin-bottom: 14px;
-            font-size: 1.1rem;
+            margin-bottom: 16px;
+            font-size: 1.15rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .folder-content {
             font-size: 1.05rem;
-            line-height: 1.8;
-            white-space: pre-wrap;
+            line-height: 1.85;
             color: var(--text-primary);
+        }
+
+        .step-item {
+            background-color: rgba(17, 24, 39, 0.6);
+            border-left: 3px solid #10b981;
+            padding: 12px 16px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .answer-highlight {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15));
+            border: 1px solid #10b981;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            color: #34d399;
+            margin-top: 14px;
+            font-size: 1.2rem;
+            display: inline-block;
         }
 
         .action-row {
@@ -288,17 +342,19 @@
             margin-top: 25px;
         }
 
-        /* Full Color Print Formatting */
+        /* Anti-Cutoff & Full Color Print Formatting */
         @media print {
             body { background: white !important; color: black !important; padding: 0 !important; }
             .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
             header, .card:not(.output-section), .btn-primary, .action-row { display: none !important; }
             .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; padding: 0 !important; margin: 0 !important; }
-            .cabinet-folder { background: #fdfdfd !important; border: 2px solid #cbd5e1 !important; border-left: 6px solid #4f46e5 !important; color: black !important; box-shadow: none !important; margin-bottom: 25px !important; page-break-inside: avoid !important; break-inside: avoid !important; }
-            .folder-tab { background: #4f46e5 !important; color: white !important; }
-            .problem-badge { background-color: #f1f5f9 !important; border: 1px solid #cbd5e1 !important; color: #1e293b !important; }
-            .cabinet-header h2 { color: #b45309 !important; }
+            .cabinet-folder { background: #ffffff !important; border: 2px solid #e2e8f0 !important; border-left: 6px solid #4f46e5 !important; color: black !important; box-shadow: none !important; margin-bottom: 30px !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+            .folder-tab { background: #4f46e5 !important; color: white !important; box-shadow: none !important; }
+            .problem-badge { background-color: #f8fafc !important; border: 1px solid #cbd5e1 !important; color: #0f172a !important; box-shadow: none !important; }
+            .cabinet-header h2 { color: #b45309 !important; border-bottom: 3px solid #b45309 !important; }
             .folder-content { color: black !important; }
+            .step-item { background-color: #f8fafc !important; border-left: 3px solid #059669 !important; box-shadow: none !important; }
+            .answer-highlight { background-color: #ecfdf5 !important; border: 1px solid #059669 !important; color: #047857 !important; }
             .katex { color: black !important; }
         }
     </style>
@@ -315,17 +371,6 @@
         <div class="control-group">
             <label for="apiKeyInput">Gemini API Key (Saved locally in your browser)</label>
             <input type="password" id="apiKeyInput" placeholder="Paste your API key here (AIzaSy...)" onchange="saveApiKey()">
-        </div>
-
-        <div class="control-group">
-            <label for="gradeSelect">Select Grade Level</label>
-            <select id="gradeSelect">
-                <option value="Middle School Math">Middle School Math (Pre-Algebra)</option>
-                <option value="Algebra 1" selected>Algebra 1</option>
-                <option value="Geometry">Geometry</option>
-                <option value="Algebra 2 / Word Problems">Algebra 2 / Word Problems</option>
-                <option value="Pre-Calculus / Calculus">Pre-Calculus / Calculus</option>
-            </select>
         </div>
 
         <div class="control-group">
@@ -435,7 +480,6 @@
     async function solveProblemAI() {
         const apiKey = document.getElementById('apiKeyInput').value.trim();
         const problemText = document.getElementById('problemInput').value.trim();
-        const gradeLevel = document.getElementById('gradeSelect').value;
         const wantExplanation = document.getElementById('includeExplanation').checked;
 
         if (!apiKey) {
@@ -452,13 +496,14 @@
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
-        const systemInstruction = `You are an expert ${gradeLevel} math tutor helping a student who gets overwhelmed easily. 
+        const systemInstruction = `You are an elite mathematics tutor helping a student who wants gorgeous, rich, dummy-proof explanations with zero BS.
         CRITICAL FORMATTING INSTRUCTIONS:
-        - Analyze the user's input (it could be a single problem or a list of numbered problems).
+        - Analyze the user's input (a single problem or list of numbered problems).
         - For EVERY individual problem, create a separate cabinet folder.
         - Folder title format must strictly be: "Problem 1", "Problem 2", "Problem 3", etc.
-        - You MUST include the original problem statement or expression clearly at the top of each folder response.
-        - If the user wants explanations (${wantExplanation}), provide a very deep, rich, comprehensive, dummy-proof plain-English breakdown of every single step in detail so they fully understand how the math works. Handle any fractions, radicals, or symbols accurately. If explanation is turned off, provide just the clean final answer.
+        - You MUST include the original problem statement or expression clearly at the top.
+        - If the user wants explanations (${wantExplanation}), provide a deeply detailed, beautifully structured breakdown using structured steps (e.g. format individual steps cleanly inside HTML blocks or bullet points, use zero raw asterisks for headers). Explain the *why* and *how* like an A+ student tutor. Handle any fractions, radicals, or symbols accurately using LaTeX inside dollar signs.
+        - If explanation is turned off, provide just the clean final answer.
         - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has three keys: "title" (e.g. "Problem 1"), "problem" (the original expression/question), and "summary" (containing the final answer and the detailed explanation if enabled).`;
 
         const userProblem = `Problem / Expression / Text List: ${problemText}`;
@@ -497,7 +542,10 @@
                 parsedResult.folders.forEach((folder, index) => {
                     const probTitle = folder.title || 'Problem ' + (index + 1);
                     const origProblem = folder.problem || 'Expression not provided';
-                    const folderSummary = folder.summary || '';
+                    let folderSummary = folder.summary || '';
+
+                    // Clean up any raw markdown bold asterisks if the AI accidentally generated them, turning them into styled step elements
+                    folderSummary = folderSummary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
                     foldersHTML += `
                         <div class="cabinet-folder">
