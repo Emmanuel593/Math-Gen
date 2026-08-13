@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-    
-    <!-- QRCode library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 
     <style>
         :root {
@@ -202,13 +199,12 @@
             display: none;
         }
 
-        /* Print Header & QR */
+        /* Print Header - Cleaned with zero orphans */
         .print-header-block {
             display: none;
             border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-            position: relative;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
         }
 
         .print-header-grid {
@@ -219,37 +215,25 @@
             color: #1e293b;
         }
 
-        .qr-code-wrapper {
-            position: absolute;
-            top: 0;
-            right: 0;
-            text-align: center;
-            display: none;
-        }
-        .qr-code-wrapper div svg {
-            width: 70px !important;
-            height: 70px !important;
-        }
-
         /* Concept Map */
         .concept-map-card {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(14, 165, 233, 0.05));
             border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 25px;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
             page-break-inside: avoid;
             break-inside: avoid;
         }
 
-        /* Cabinet Folders - STRICT Prevention of breaking internal content */
+        /* Cabinet Folders - Strict Pagination Rules to prevent page splitting */
         .cabinet-folder {
             background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
             border: 2px solid #374151;
             border-left: 6px solid #3b82f6;
-            border-radius: 14px;
-            padding: 24px;
-            margin-bottom: 28px;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             position: relative;
             page-break-inside: avoid !important;
@@ -261,69 +245,59 @@
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: white;
             font-weight: 700;
-            padding: 8px 18px;
-            border-radius: 8px 8px 0 0;
-            font-size: 1rem;
+            padding: 6px 14px;
+            border-radius: 6px 6px 0 0;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            margin-bottom: 16px;
-        }
-
-        .priority-badge {
-            float: right;
-            background: #d97706;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 700;
+            margin-bottom: 12px;
         }
 
         .problem-badge {
             background: rgba(59, 130, 246, 0.15);
             border: 1px solid rgba(59, 130, 246, 0.3);
-            padding: 14px 18px;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
             font-weight: 600;
             color: #93c5fd;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            line-height: 1.5;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+            line-height: 1.4;
         }
 
         .pitfall-alert {
             background: rgba(239, 68, 68, 0.15);
             border-left: 4px solid #ef4444;
-            padding: 10px 14px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 10px;
             color: #fca5a5;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .method-block, .verification-block {
             background: rgba(16, 185, 129, 0.1);
             border-left: 4px solid #10b981;
-            padding: 10px 14px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 10px;
             color: #a7f3d0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .folder-content {
-            font-size: 1rem;
-            line-height: 1.8;
+            font-size: 0.95rem;
+            line-height: 1.5;
             color: var(--text-primary);
         }
 
-        /* FINAL ANSWER BOX - Guaranteed to stay inside the folder block */
+        /* FINAL ANSWER BOX - Locked inside the folder block so it never orphans */
         .final-answer-box {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
             border: 2px solid #10b981;
-            padding: 14px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-size: 1.2rem;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 1.1rem;
             font-weight: 800;
             color: #34d399;
             text-align: center;
@@ -352,12 +326,12 @@
         }
 
         .sticky-note-box {
-            margin-top: 15px;
+            margin-top: 12px;
             background: #fef08a;
             color: #713f12;
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             border: 1px solid #facc15;
         }
@@ -366,9 +340,9 @@
             display: none;
             border: 2px dashed #94a3b8;
             border-radius: 10px;
-            padding: 20px;
-            margin-top: 30px;
-            min-height: 140px;
+            padding: 15px;
+            margin-top: 20px;
+            min-height: 100px;
             background: #fafafa;
             page-break-inside: avoid;
         }
@@ -387,15 +361,17 @@
             color: #0f172a;
         }
 
+        /* Quick-Cut Cards Sheet */
         .quick-cut-sheet {
             display: none;
-            margin-top: 30px;
+            margin-top: 25px;
             border: 2px dashed #059669;
             padding: 20px;
             border-radius: 10px;
             background: #f0fdf4;
             color: #065f46;
             page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .formula-flyout-btn {
@@ -445,14 +421,32 @@
             header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header, .formula-flyout-btn { display: none !important; }
             .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; }
             .print-header-block { display: block !important; }
-            .qr-code-wrapper { display: block !important; }
             .scratchpad-area { display: block !important; }
-            .quick-cut-sheet { display: block !important; }
             .divider-page { display: flex !important; }
-            .cabinet-folder { padding-left: 40px !important; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-left: 6px solid #2563eb !important; color: black !important; box-shadow: none !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+            .quick-cut-sheet { display: block !important; }
+            
+            /* Strict Print Layout Controls - Zero Orphaning */
+            .cabinet-folder { 
+                padding-left: 35px !important; 
+                background: #ffffff !important; 
+                border: 1px solid #cbd5e1 !important; 
+                border-left: 5px solid #2563eb !important; 
+                color: black !important; 
+                box-shadow: none !important; 
+                page-break-inside: avoid !important; 
+                break-inside: avoid !important;
+                margin-bottom: 15px !important;
+            }
             .folder-tab { background: #2563eb !important; color: white !important; }
             .problem-badge { background-color: #f8fafc !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; }
-            .final-answer-box { background-color: #ecfdf5 !important; border: 2px solid #059669 !important; color: #047857 !important; filter: none !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+            .final-answer-box { 
+                background-color: #ecfdf5 !important; 
+                border: 2px solid #059669 !important; 
+                color: #047857 !important; 
+                filter: none !important; 
+                page-break-inside: avoid !important; 
+                break-inside: avoid !important; 
+            }
             .final-answer-box::after { display: none !important; }
             .folder-content { color: black !important; }
             .katex { color: black !important; }
@@ -490,11 +484,11 @@
         <div class="config-grid">
             <div>
                 <label for="studentName">Student Name</label>
-                <input type="text" id="studentName" placeholder="Alex Smith">
+                <input type="text" id="studentName" value="Emmanuel Bazikian">
             </div>
             <div>
                 <label for="className">Class / Course</label>
-                <input type="text" id="className" value="Algebra 2">
+                <input type="text" id="className" value="Algebra 2" readonly style="opacity: 0.7; cursor: not-allowed;">
             </div>
             <div>
                 <label for="assignmentTitle">Assignment Title</label>
@@ -512,10 +506,10 @@
                 </select>
             </div>
             <div>
-                <label for="priorityFilter">Default Exam Priority</label>
-                <select id="priorityFilter">
-                    <option value="all">Show All Problems</option>
-                    <option value="high">High Priority Only</option>
+                <label for="includeQuickCut">Quick-Cut Formula Cheat Cards</label>
+                <select id="includeQuickCut">
+                    <option value="yes">Include at Bottom of Printout</option>
+                    <option value="no">Exclude</option>
                 </select>
             </div>
         </div>
@@ -567,10 +561,6 @@
                 <div><strong>Date:</strong> <span id="lblDate"></span></div>
             </div>
             <div style="margin-top: 8px; font-size: 1.1rem; font-weight: bold; color: #1e3a8a;" id="lblAssignmentTitle"></div>
-            <div class="qr-code-wrapper">
-                <div id="qrCodeContainer"></div>
-                <div style="font-size:0.65rem; color:#64748b; margin-top:2px;">Scan Vault</div>
-            </div>
         </div>
 
         <div id="conceptMapContainer"></div>
@@ -580,10 +570,10 @@
             <h3 style="margin-top:0; color:#065f46;">Quick-Cut Algebra 2 Formula Cards</h3>
             <p style="font-size:0.9rem; margin-bottom:15px;">Cut along dashed lines to keep these key formulas in your pocket.</p>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
-                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff;"><strong>Quadratic Formula:</strong><br>$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$</div>
-                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff;"><strong>Vertex Form:</strong><br>$f(x) = a(x - h)^2 + k$</div>
-                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff;"><strong>Slope-Intercept:</strong><br>$y = mx + b$</div>
-                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff;"><strong>Log Product Rule:</strong><br>$\log_b(xy) = \log_b x + \log_b y$</div>
+                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Quadratic Formula:</strong><br>$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$</div>
+                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Vertex Form:</strong><br>$f(x) = a(x - h)^2 + k$</div>
+                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Slope-Intercept:</strong><br>$y = mx + b$</div>
+                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Log Product Rule:</strong><br>$\log_b(xy) = \log_b x + \log_b y$</div>
             </div>
         </div>
 
@@ -606,7 +596,6 @@
         const savedKey = localStorage.getItem('gemini_math_key');
         if (savedKey) document.getElementById('apiKeyInput').value = savedKey;
         document.getElementById('lblDate').innerText = new Date().toLocaleDateString();
-        generateQRCode();
     }
 
     function saveApiKey() {
@@ -615,21 +604,6 @@
 
     function toggleFormulaSidebar() {
         document.getElementById('formulaSidebar').classList.toggle('open');
-    }
-
-    function generateQRCode() {
-        const container = document.getElementById('qrCodeContainer');
-        if (container && typeof qrcode !== 'undefined') {
-            try {
-                container.innerHTML = '';
-                var qr = qrcode(4, 'L');
-                qr.addData(window.location.href);
-                qr.make();
-                container.innerHTML = qr.createSvgTag({scalable: true});
-            } catch (e) {
-                console.warn("QR Code generation fallback skipped:", e);
-            }
-        }
     }
 
     let uploadedFilePayload = null;
@@ -687,15 +661,15 @@
         const folders = document.querySelectorAll('.cabinet-folder');
         folders.forEach(f => {
             if (mode === 'compact') {
-                f.style.padding = '15px';
-                f.style.marginBottom = '15px';
-                f.style.fontSize = '0.95rem';
+                f.style.padding = '12px';
+                f.style.marginBottom = '12px';
+                f.style.fontSize = '0.9rem';
             } else if (mode === 'large') {
-                f.style.padding = '30px';
-                f.style.fontSize = '1.15rem';
+                f.style.padding = '25px';
+                f.style.fontSize = '1.1rem';
             } else {
-                f.style.padding = '24px';
-                f.style.fontSize = '1rem';
+                f.style.padding = '18px';
+                f.style.fontSize = '0.95rem';
             }
         });
     }
@@ -774,10 +748,10 @@
     async function solveProblemAI() {
         const apiKey = document.getElementById('apiKeyInput').value.trim();
         const problemText = document.getElementById('problemInput').value.trim();
-        const wantConceptMap = document.getElementById('includeConceptMap').checked;
+        const wantQuickCut = document.getElementById('includeQuickCut').value === 'yes';
 
-        const sName = document.getElementById('studentName').value || 'Student';
-        const cName = document.getElementById('className').value || 'Algebra 2';
+        const sName = document.getElementById('studentName').value || 'Emmanuel Bazikian';
+        const cName = "Algebra 2";
         const aTitle = document.getElementById('assignmentTitle').value || 'Problem Set';
 
         document.getElementById('lblStudentName').innerText = sName;
@@ -834,12 +808,11 @@
             
             const folders = document.querySelectorAll('.cabinet-folder');
             if (folders.length > 0) {
-                document.getElementById('quickCutSheet').style.display = 'block';
+                document.getElementById('quickCutSheet').style.display = wantQuickCut ? 'block' : 'none';
                 document.getElementById('binderDividerPage').style.display = 'flex';
             }
 
             renderMathOnScreen();
-            generateQRCode();
 
         } catch (err) {
             document.getElementById('cabinetFoldersContainer').innerHTML = `<div class='cabinet-folder' style='border-color:#ef4444;'><div class='folder-content'>Error: ${err.message}</div></div>`;
