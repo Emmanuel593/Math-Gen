@@ -117,6 +117,23 @@
             border-color: var(--accent);
         }
 
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
         .upload-dropzone {
             border: 2px dashed var(--border);
             border-radius: 10px;
@@ -293,6 +310,11 @@
             <textarea id="problemInput" class="math-textarea" placeholder="Paste your massive problem list or single confusing problem here... We will organize it into happy little folders."></textarea>
         </div>
 
+        <div class="checkbox-group">
+            <input type="checkbox" id="includeExplanation" checked>
+            <label for="includeExplanation" style="display:inline; margin:0; cursor:pointer;">Include full step-by-step detailed explanation</label>
+        </div>
+
         <div class="control-group">
             <label>Upload Assignment PDF or Image</label>
             <div class="upload-dropzone">
@@ -392,6 +414,7 @@
         const apiKey = document.getElementById('apiKeyInput').value.trim();
         const problemText = document.getElementById('problemInput').value.trim();
         const gradeLevel = document.getElementById('gradeSelect').value;
+        const wantExplanation = document.getElementById('includeExplanation').checked;
 
         if (!apiKey) {
             alert('Please enter your Gemini API key at the top to use the live solver.');
@@ -410,10 +433,10 @@
         const systemInstruction = `You are an expert ${gradeLevel} math tutor helping a student who gets overwhelmed easily. 
         CRITICAL FORMATTING INSTRUCTIONS:
         - Analyze the user's input (it could be a single problem or a list of numbered problems).
-        - For EVERY individual problem, create a separate cabinet folder containing:
-          1. The exact final answer (formatted with $...$ for nice math rendering if needed).
-          2. A super simple, happy, dumbass-proof plain-English brief breakdown explaining *why* and *how* it works step-by-step, as if explaining it to someone with zero background knowledge. Absolutely zero confusing raw backslash code blocks or jargon.
-        - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has two keys: "title" (e.g. "Problem 1 Folder") and "summary" (containing the final answer and the ultra-clear brief explanation).`;
+        - For EVERY individual problem, create a separate cabinet folder.
+        - Folder title format must strictly be: "Problem 1", "Problem 2", "Problem 3", etc.
+        - If the user wants explanations (${wantExplanation}), provide a very deep, rich, comprehensive, dummy-proof plain-English breakdown of every single step in detail so they fully understand how the math works. If explanation is turned off, provide just the clean final answer.
+        - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has two keys: "title" (e.g. "Problem 1") and "summary" (containing the answer and the detailed explanation if enabled).`;
 
         const userProblem = `Problem / Expression / Text List: ${problemText}`;
 
@@ -451,7 +474,7 @@
                 parsedResult.folders.forEach((folder, index) => {
                     foldersHTML += `
                         <div class="cabinet-folder">
-                            <div class="folder-tab">${folder.title || 'Folder ' + (index + 1)}</div>
+                            <div class="folder-tab">${folder.title || 'Problem ' + (index + 1)}</div>
                             <div class="folder-content">${folder.summary}</div>
                         </div>
                     `;
