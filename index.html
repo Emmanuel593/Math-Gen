@@ -10,8 +10,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     
-    <!-- QRCode library for QR Code Reference Linker -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <!-- Safe Fallback QRCode CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 
     <style>
         :root {
@@ -209,7 +209,7 @@
             display: none;
         }
 
-        /* Feature 13: Custom Homework Header & QR */
+        /* Print Header & QR */
         .print-header-block {
             display: none;
             border-bottom: 2px solid #333;
@@ -233,12 +233,12 @@
             text-align: center;
             display: none;
         }
-        .qr-code-wrapper canvas {
+        .qr-code-wrapper div svg {
             width: 70px !important;
             height: 70px !important;
         }
 
-        /* Feature 26: Visual Concept Map */
+        /* Concept Map */
         .concept-map-card {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(14, 165, 233, 0.05));
             border: 1px solid rgba(59, 130, 246, 0.3);
@@ -247,7 +247,7 @@
             margin-bottom: 25px;
         }
 
-        /* Feature 7: Cabinet Folder System & Feature 25: Smart Alignment */
+        /* Cabinet Folders & Alignment */
         .cabinet-folder {
             background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
             border: 2px solid #374151;
@@ -273,7 +273,6 @@
             margin-bottom: 16px;
         }
 
-        /* Feature 23: Exam Priority Tagging */
         .priority-badge {
             float: right;
             background: #d97706;
@@ -296,7 +295,6 @@
             line-height: 1.6;
         }
 
-        /* Feature 4: Common Error Alerts */
         .pitfall-alert {
             background: rgba(239, 68, 68, 0.15);
             border-left: 4px solid #ef4444;
@@ -307,7 +305,6 @@
             font-size: 0.95rem;
         }
 
-        /* Feature 5: Alternative Method & Feature 6: Verification Proof */
         .method-block, .verification-block {
             background: rgba(16, 185, 129, 0.1);
             border-left: 4px solid #10b981;
@@ -336,7 +333,7 @@
             text-align: center;
         }
 
-        /* Feature 8: Quiz Mode */
+        /* Quiz Mode */
         .quiz-hidden .final-answer-box {
             filter: blur(8px);
             user-select: none;
@@ -356,7 +353,6 @@
             font-size: 0.95rem;
         }
 
-        /* Feature 9: Sticky Note Annotator */
         .sticky-note-box {
             margin-top: 15px;
             background: #fef08a;
@@ -368,7 +364,6 @@
             border: 1px solid #facc15;
         }
 
-        /* Feature 22: Spaced-Repetition Review Tracker */
         .review-tracker-bar {
             margin-top: 15px;
             background: rgba(255,255,255,0.05);
@@ -381,7 +376,6 @@
             color: var(--text-secondary);
         }
 
-        /* Feature 16: Scratchpad Box */
         .scratchpad-area {
             display: none;
             border: 2px dashed #94a3b8;
@@ -393,7 +387,6 @@
             page-break-inside: avoid;
         }
 
-        /* Feature 20: Binder Section Dividers */
         .divider-page {
             display: none;
             page-break-before: always;
@@ -408,7 +401,6 @@
             color: #0f172a;
         }
 
-        /* Feature 14: Quick-Cut Cheat Sheet */
         .quick-cut-sheet {
             display: none;
             margin-top: 30px;
@@ -420,7 +412,6 @@
             page-break-inside: avoid;
         }
 
-        /* Feature 11: Formula Flyout Sidebar */
         .formula-flyout-btn {
             position: fixed;
             bottom: 25px;
@@ -453,7 +444,6 @@
         }
         .formula-sidebar.open { left: 0; }
 
-        /* Feature 19: Eco-Ink Mode */
         body.eco-ink-mode .card, body.eco-ink-mode .cabinet-folder {
             background: #ffffff !important;
             color: #000000 !important;
@@ -473,7 +463,6 @@
             .scratchpad-area { display: block !important; }
             .quick-cut-sheet { display: block !important; }
             .divider-page { display: flex !important; }
-            /* Feature 15: Hole-Punch Margin Mode */
             .cabinet-folder { padding-left: 50px !important; background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-left: 6px solid #2563eb !important; color: black !important; box-shadow: none !important; }
             .folder-tab { background: #2563eb !important; color: white !important; }
             .problem-badge { background-color: #f8fafc !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; }
@@ -486,7 +475,6 @@
 </head>
 <body>
 
-<!-- Feature 11: Formula Flyout Sidebar -->
 <button class="formula-flyout-btn" onclick="toggleFormulaSidebar()">📐 Quick Formulas</button>
 <div class="formula-sidebar" id="formulaSidebar">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -512,7 +500,6 @@
             <input type="password" id="apiKeyInput" placeholder="Paste your API key here (AIzaSy...)" onchange="saveApiKey()">
         </div>
 
-        <!-- Feature 13: Custom Homework Header Controls -->
         <div class="config-grid">
             <div>
                 <label for="studentName">Student Name</label>
@@ -528,7 +515,6 @@
             </div>
         </div>
 
-        <!-- Feature 17: Font / Density Selector -->
         <div class="config-grid">
             <div>
                 <label for="printDensity">Print Layout Density</label>
@@ -547,10 +533,9 @@
             </div>
         </div>
 
-        <!-- Feature 1 & 2: AI Solving & OCR Smart-Correction -->
         <div class="control-group">
             <label for="problemInput">Paste Your Problem Set or Raw Text</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste messy equations, word problems, or homework lists here... OCR Smart-Correction will automatically clean and normalize symbols."></textarea>
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste messy equations, word problems, or homework lists here..."></textarea>
         </div>
 
         <div class="checkbox-group">
@@ -563,7 +548,7 @@
         </div>
 
         <div class="control-group">
-            <label>Upload Assignment Image or PDF (OCR Enhanced)</label>
+            <label>Upload Assignment Image or PDF</label>
             <div class="upload-dropzone">
                 <span id="uploadText">Click or drag & drop worksheet image or PDF here</span>
                 <input type="file" id="fileInput" accept="image/*,application/pdf" onchange="handleFileUpload(event)">
@@ -577,7 +562,6 @@
         <button class="btn-primary" onclick="solveProblemAI()">📂 Open The Answer Cabinet & Build Study Suite</button>
     </div>
 
-    <!-- Feature 20: Binder Section Divider Page (Printed first if included) -->
     <div class="divider-page" id="binderDividerPage">
         <h1 style="font-size: 3rem; margin:0 0 15px 0; color:#1e3a8a;" id="dividerTitleText">SECTION DIVIDER</h1>
         <p style="font-size: 1.3rem; color:#475569;" id="dividerSubtitleText">Verified Study Sheets & Reference Vault</p>
@@ -589,7 +573,6 @@
             <button class="btn-secondary" style="margin:0; background:#4b5563;" onclick="toggleFocusMode()" id="focusToggleBtn">🌙 Focus Mode</button>
         </div>
 
-        <!-- Feature 13 & 21: Print Header Block with QR Code Linker -->
         <div class="print-header-block" id="printHeaderBlock">
             <div class="print-header-grid">
                 <div><strong>Name:</strong> <span id="lblStudentName"></span></div>
@@ -598,37 +581,30 @@
             </div>
             <div style="margin-top: 8px; font-size: 1.1rem; font-weight: bold; color: #1e3a8a;" id="lblAssignmentTitle"></div>
             <div class="qr-code-wrapper">
-                <canvas id="qrCodeCanvas"></canvas>
+                <div id="qrCodeContainer"></div>
                 <div style="font-size:0.65rem; color:#64748b; margin-top:2px;">Scan Vault</div>
             </div>
         </div>
 
-        <!-- Feature 18: Table of Contents Index -->
         <div id="tableOfContentsContainer" class="card" style="background:#1f2937; margin-bottom:25px; display:none;">
             <h3 style="margin-top:0; color:var(--accent);">📋 Table of Contents Index</h3>
             <ul id="tocList" style="margin:0; padding-left:20px; line-height:1.8;"></ul>
         </div>
 
-        <!-- Feature 26: Visual Concept Map -->
         <div id="conceptMapContainer"></div>
-
-        <!-- Feature 7: Dynamic Cabinet Folders Container -->
         <div id="cabinetFoldersContainer"></div>
 
-        <!-- Feature 14: Quick-Cut Flashcard Summary Sheet -->
         <div class="quick-cut-sheet" id="quickCutSheet">
             <h3 style="margin-top:0; color:#065f46;">✂️ Quick-Cut Formula & Cheat Sheet Cards</h3>
             <p style="font-size:0.9rem; margin-bottom:10px;">Cut along dashed lines to keep these key formulas in your pocket.</p>
             <div id="quickCutContent" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;"></div>
         </div>
 
-        <!-- Feature 16: Printable Scratchpad Box -->
         <div class="scratchpad-area">
             <h4 style="margin:0 0 10px 0; color:#64748b; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em;">Scratchpad & Manual Working Space</h4>
             <div style="height: 100px;"></div>
         </div>
 
-        <!-- Action Controls -->
         <div class="action-row" style="margin-top:25px; display:flex; flex-wrap:wrap; gap:10px;">
             <button class="btn-secondary" style="background: #2563eb;" onclick="window.print()">🖨️ Print Study Guide</button>
             <button class="btn-secondary" style="background: #059669;" onclick="exportAnkiCSV()">🧠 Export Anki CSV</button>
@@ -655,11 +631,18 @@
     }
 
     function generateQRCode() {
-        const canvas = document.getElementById('qrCodeCanvas');
-        if (canvas) {
-            QRCode.toCanvas(canvas, window.location.href, { width: 70, margin: 0 }, function (error) {
-                if (error) console.error(error);
-            });
+        const container = document.getElementById('qrCodeContainer');
+        if (container && typeof qrcode !== 'undefined') {
+            try {
+                container.innerHTML = '';
+                // Type number 4, Error correction level L
+                var qr = qrcode(4, 'L');
+                qr.addData(window.location.href);
+                qr.make();
+                container.innerHTML = qr.createSvgTag({scalable: true});
+            } catch (e) {
+                console.warn("QR Code generation fallback skipped:", e);
+            }
         }
     }
 
@@ -864,7 +847,6 @@
 
             document.getElementById('cabinetFoldersContainer').innerHTML = htmlOutput;
             
-            // Generate Table of Contents
             const folders = document.querySelectorAll('.cabinet-folder');
             const tocList = document.getElementById('tocList');
             tocList.innerHTML = '';
@@ -874,12 +856,10 @@
                 const badge = f.querySelector('.problem-badge');
                 const title = badge ? badge.innerText.substring(0, 45) + '...' : `Problem ${idx + 1}`;
                 
-                // Add TOC item
                 const li = document.createElement('li');
                 li.innerHTML = `<strong>Problem ${idx + 1}:</strong> ${title}`;
                 tocList.appendChild(li);
 
-                // Add Spaced-Repetition Review Tracker Bar
                 const tracker = document.createElement('div');
                 tracker.className = 'review-tracker-bar';
                 tracker.innerHTML = `<span><strong>Review Schedule:</strong></span>
@@ -888,7 +868,6 @@
                     <label><input type="checkbox"> Day 7</label>`;
                 f.appendChild(tracker);
 
-                // Build Quick-Cut Cheat Sheet card
                 quickCutHTML += `<div style="border:1px solid #10b981; padding:10px; border-radius:6px; background:#fff;"><strong>P.${idx+1} Rule:</strong> Key formula/concept extracted.</div>`;
             });
 
