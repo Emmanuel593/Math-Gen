@@ -265,8 +265,8 @@
             border: 2px solid #374151;
             border-left: 6px solid #3b82f6;
             border-radius: 14px;
-            padding: 24px;
-            margin-bottom: 24px;
+            padding: 28px;
+            margin-bottom: 28px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             animation: folderPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
@@ -290,11 +290,11 @@
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: white;
             font-weight: 700;
-            padding: 6px 16px;
+            padding: 8px 18px;
             border-radius: 8px 8px 0 0;
-            font-size: 0.95rem;
+            font-size: 1rem;
             text-transform: uppercase;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             letter-spacing: 0.05em;
             box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
         }
@@ -302,32 +302,50 @@
         .problem-badge {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(14, 165, 233, 0.1));
             border: 1px solid rgba(59, 130, 246, 0.4);
-            padding: 14px 18px;
-            border-radius: 10px;
+            padding: 16px 20px;
+            border-radius: 12px;
             font-weight: 600;
             color: #93c5fd;
-            margin-bottom: 16px;
-            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            line-height: 1.6;
         }
 
         .folder-content {
             font-size: 1.1rem;
-            line-height: 1.9;
+            line-height: 2.1;
             color: var(--text-primary);
+        }
+
+        .folder-content p {
+            margin-bottom: 16px;
+            margin-top: 0;
+        }
+
+        .folder-content ul, .folder-content ol {
+            margin-top: 0;
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .folder-content li {
+            margin-bottom: 8px;
+            line-height: 1.8;
         }
 
         .final-answer-box {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
             border: 2px solid #10b981;
-            padding: 16px;
-            border-radius: 10px;
-            margin-top: 18px;
-            font-size: 1.25rem;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 24px;
+            font-size: 1.3rem;
             font-weight: 800;
             color: #34d399;
             text-align: center;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            letter-spacing: 0.02em;
         }
 
         /* Progress Bar Styles */
@@ -465,7 +483,7 @@
             document.getElementById('apiKeyInput').value = savedKey;
         }
 
-        document.getElementById('problemInput').addEventListener('paste', function (e) {
+        document.getElementById('problemInput'].addEventListener('paste', function (e) {
             e.preventDefault();
             const clipboardData = e.clipboardData || window.clipboardData;
             const text = clipboardData.getData('text/plain');
@@ -563,7 +581,7 @@
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
         const instructionMode = wantExplanation 
-            ? "Write out a deeply detailed, conversational, step-by-step walkthrough explaining every single action like a human buddy sitting next to them. Never rush or skip steps. CRITICAL: Output plain text paragraphs, dashes (-) for lists, and HTML tags like <p>, <strong>, <br> only. DO NOT use markdown headers like '#', '##', or '###' under any circumstances. Put the final answer inside a div with class 'final-answer-box' at the very bottom." 
+            ? "Write out a deeply detailed, conversational, step-by-step walkthrough explaining every single action like a human buddy sitting next to them. Never rush or skip steps. CRITICAL FORMATTING RULES: You must output clean, beautifully structured HTML tags for every single paragraph (<p>), bullet point (<ul><li>), and bold term (<strong>). Never lump text together into one wall of text. Put clear paragraph spacing between each logical phase. Put the final answer inside a div with class 'final-answer-box' at the very bottom." 
             : "First, automatically clean up and rewrite the raw problem text. Then provide ONLY the clean final answer inside a div with class 'final-answer-box'. Do NOT include any explanations or steps.";
 
         const systemInstruction = "You are an elite, patient mathematics and science tutor helping a student who gets easily overwhelmed.\n" +
@@ -571,8 +589,7 @@
             "- Analyze the user's input (it might contain jumbled lines, messy web text, or equations from a scanned worksheet).\n" +
             "- Automatically fix and un-jumble the text so each distinct problem is cleanly structured.\n" +
             "- For EVERY individual problem, create a separate cabinet folder.\n" +
-            "- Format your response using clean HTML so it parses seamlessly without JSON errors.\n" +
-            "- Use structure like: <div class=\"cabinet-folder\"><div class=\"folder-tab\">Problem 1</div><div class=\"problem-badge\">📌 Cleaned Problem: [Problem Statement]</div><div class=\"folder-content\">[Explanation / Answer box]</div></div>\n" +
+            "- Format your response using clean HTML elements (<div class=\"cabinet-folder\">...</div>, <div class=\"folder-tab\">...</div>, <div class=\"problem-badge\">...</div>, <div class=\"folder-content\">...</div>) so it parses seamlessly without breaking layouts or bunching text together.\n" +
             "- Mode requested: " + instructionMode + "\n" +
             "- Handle numbers, formulas, fractions, and units accurately using LaTeX inside dollar signs.";
 
@@ -599,7 +616,6 @@
             }
         }
 
-        // Updated endpoint to use Gemini 3.5 Flash Lite which has massive 500 RPD daily capacity headroom
         const modelEndpoint = "gemini-3.5-flash-lite";
 
         try {
