@@ -32,11 +32,26 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            transition: background 0.3s ease;
+        }
+
+        body.focus-mode {
+            background-color: #030712;
+            padding: 10px;
+        }
+
+        body.focus-mode .hide-in-focus {
+            display: none !important;
         }
 
         .container {
             width: 100%;
             max-width: 950px;
+            transition: max-width 0.3s ease;
+        }
+
+        body.focus-mode .container {
+            max-width: 1200px;
         }
 
         header {
@@ -112,7 +127,6 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        /* Fix for browser autofill turning inputs white */
         input[type="password"]:-webkit-autofill,
         input[type="password"]:-webkit-autofill:hover, 
         input[type="password"]:-webkit-autofill:focus {
@@ -253,7 +267,7 @@
         .cabinet-header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
             margin-bottom: 20px;
             border-bottom: 3px solid var(--cabinet-gold);
             padding-bottom: 10px;
@@ -282,6 +296,7 @@
             transform: translateY(15px);
             page-break-inside: avoid !important;
             break-inside: avoid !important;
+            position: relative;
         }
 
         .cabinet-folder:nth-child(2) { border-left-color: #0ea5e9; animation-delay: 0.1s; }
@@ -355,6 +370,32 @@
             text-align: center;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
             letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+        }
+
+        /* Quiz Mode Hide Class */
+        .quiz-hidden .final-answer-box {
+            filter: blur(8px);
+            user-select: none;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .quiz-hidden .final-answer-box::after {
+            content: "🔒 Click to Reveal Final Answer & Test Yourself";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: bold;
+            background: rgba(16, 185, 129, 0.9);
+            padding: 6px 14px;
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            filter: none;
         }
 
         /* Progress Bar Styles */
@@ -389,6 +430,22 @@
             flex-wrap: wrap;
             gap: 10px;
             margin-top: 25px;
+            align-items: center;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+            animation: fadeInDown 0.3s ease;
         }
 
         @media print {
@@ -420,7 +477,8 @@
             .cabinet-folder { background: #ffffff !important; border: 2px solid #cbd5e1 !important; border-left: 6px solid #2563eb !important; color: black !important; box-shadow: none !important; margin-bottom: 25px !important; page-break-inside: avoid !important; break-inside: avoid !important; }
             .folder-tab { background: #2563eb !important; color: white !important; box-shadow: none !important; }
             .problem-badge { background-color: #f8fafc !important; border: 1px solid #cbd5e1 !important; color: #0f172a !important; box-shadow: none !important; }
-            .final-answer-box { background-color: #ecfdf5 !important; border: 2px solid #059669 !important; color: #047857 !important; box-shadow: none !important; }
+            .final-answer-box { background-color: #ecfdf5 !important; border: 2px solid #059669 !important; color: #047857 !important; box-shadow: none !important; filter: none !important; }
+            .final-answer-box::after { display: none !important; }
             .folder-content { color: black !important; }
             .katex { color: black !important; }
         }
@@ -428,13 +486,15 @@
 </head>
 <body>
 
+<div class="toast-notification" id="toastNotification">📋 Copied all solutions to clipboard!</div>
+
 <div class="container">
-    <header>
+    <header class="hide-in-focus">
         <h1>MathGen Elite Suite</h1>
         <p>Your Ultimate Anti-Confusion File Cabinet</p>
     </header>
 
-    <div class="card">
+    <div class="card hide-in-focus">
         <div class="control-group">
             <label for="apiKeyInput">Gemini API Key (Saved locally in your browser)</label>
             <input type="password" id="apiKeyInput" placeholder="Paste your API key here (AIzaSy...)" onchange="saveApiKey()">
@@ -468,6 +528,7 @@
     <div class="card output-section" id="outputSection">
         <div class="cabinet-header">
             <h2>📁 The Answer Cabinet</h2>
+            <button class="btn-secondary" style="margin:0; background:#4b5563; font-size:0.8rem;" onclick="toggleFocusMode()" id="focusToggleBtn">🌙 Focus Mode</button>
         </div>
 
         <div class="print-only-title">
@@ -480,7 +541,9 @@
         </div>
         
         <div class="action-row">
-            <button class="btn-secondary" style="background: #2563eb;" onclick="window.print()">🖨️ Print Entire Cabinet in Color</button>
+            <button class="btn-secondary" style="background: #2563eb;" onclick="window.print()">🖨️ Print Color</button>
+            <button class="btn-secondary" style="background: #059669;" onclick="copyAllSolutions()">📋 Copy All</button>
+            <button class="btn-secondary" style="background: #d97706;" onclick="toggleQuizMode()" id="quizModeBtn">⚡ Quiz Mode: OFF</button>
         </div>
     </div>
 </div>
@@ -543,15 +606,81 @@
 
     function renderMathOnScreen() {
         if (window.renderMathInElement) {
-            window.renderMathInElement(document.getElementById('outputSection'), {
-                delimiters: [
-                    {left: '$$', right: '$$', display: true},
-                    {left: '$', right: '$', display: false},
-                    {left: '\\(', right: '\\)', display: false},
-                    {left: '\\[', right: '\\]', display: true}
-                ],
-                throwOnError: false
+            try {
+                window.renderMathInElement(document.getElementById('outputSection'), {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            } catch (err) {
+                console.warn("KaTeX non-fatal rendering exception caught:", err);
+            }
+        }
+    }
+
+    // --- Interactive Feature 1: Copy All Solutions ---
+    function copyAllSolutions() {
+        const folders = document.querySelectorAll('.cabinet-folder');
+        let textToCopy = "MASTER STUDY REFERENCE SHEET\n\n";
+        
+        folders.forEach((folder, idx) => {
+            const badge = folder.querySelector('.problem-badge');
+            const content = folder.querySelector('.folder-content');
+            if (badge && content) {
+                textToCopy += `--- [ ${badge.innerText} ] ---\n`;
+                textToCopy += content.innerText.replace(/🔒 Click to Reveal Final Answer & Test Yourself/g, '') + "\n\n";
+            }
+        });
+
+        navigator.clipboard.writeText(textToCopy.trim()).then(() => {
+            const toast = document.getElementById('toastNotification');
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        });
+    }
+
+    // --- Interactive Feature 2: Quiz Mode Toggle ---
+    let quizModeActive = false;
+    function toggleQuizMode() {
+        quizModeActive = !quizModeActive;
+        const btn = document.getElementById('quizModeBtn');
+        const folders = document.querySelectorAll('.cabinet-folder');
+
+        if (quizModeActive) {
+            btn.innerText = "⚡ Quiz Mode: ON";
+            btn.style.background = "#059669";
+            folders.forEach(f => {
+                f.classList.add('quiz-hidden');
+                const box = f.querySelector('.final-answer-box');
+                if (box) {
+                    box.onclick = () => f.classList.remove('quiz-hidden');
+                }
             });
+        } else {
+            btn.innerText = "⚡ Quiz Mode: OFF";
+            btn.style.background = "#d97706";
+            folders.forEach(f => {
+                f.classList.remove('quiz-hidden');
+            });
+        }
+    }
+
+    // --- Interactive Feature 3: Focus / Presenter Mode ---
+    let focusModeActive = false;
+    function toggleFocusMode() {
+        focusModeActive = !focusModeActive;
+        const btn = document.getElementById('focusToggleBtn');
+        if (focusModeActive) {
+            document.body.classList.add('focus-mode');
+            btn.innerText = "☀️ Exit Focus";
+            document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            document.body.classList.remove('focus-mode');
+            btn.innerText = "🌙 Focus Mode";
         }
     }
 
@@ -589,7 +718,7 @@
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
         const instructionMode = wantExplanation 
-            ? "Write out a deeply detailed, conversational, step-by-step walkthrough explaining every single action like a human buddy sitting next to them. Never rush or skip steps. CRITICAL FORMATTING RULES: You must output clean, beautifully structured HTML tags for every single paragraph (<p>), bullet point (<ul><li>), and bold term (<strong>). Never lump text together into one wall of text. Put clear paragraph spacing between each logical phase. Put the final answer inside a div with class 'final-answer-box' at the very bottom." 
+            ? "Write out a deeply detailed, conversational, step-by-step walkthrough explaining every single action like a human buddy sitting next to them. Never rush or skip steps. CRITICAL FORMATTING RULES: You must output clean, beautifully structured HTML tags for every single paragraph (<p>), bullet point (<ul><li>), and bold term (<strong>). Never lump text together into one wall of text. Put clear paragraph spacing between each logical phase. For any inline math or fractions, use clean LaTeX syntax like $\\frac{a}{b}$ securely without unescaped text macros that break renderers. Put the final answer inside a div with class 'final-answer-box' at the very bottom." 
             : "First, automatically clean up and rewrite the raw problem text. Then provide ONLY the clean final answer inside a div with class 'final-answer-box'. Do NOT include any explanations or steps.";
 
         const systemInstruction = "You are an elite, patient mathematics and science tutor helping a student who gets easily overwhelmed.\n" +
