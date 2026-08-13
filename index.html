@@ -103,13 +103,22 @@
         input[type="password"] {
             width: 100%;
             padding: 12px 16px;
-            background-color: #1f2937;
+            background-color: #1f2937 !important;
             border: 1px solid var(--border);
-            color: var(--text-primary);
+            color: var(--text-primary) !important;
             border-radius: 10px;
             font-size: 1rem;
             box-sizing: border-box;
             transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        /* Fix for browser autofill turning inputs white */
+        input[type="password"]:-webkit-autofill,
+        input[type="password"]:-webkit-autofill:hover, 
+        input[type="password"]:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--text-primary) !important;
+            -webkit-box-shadow: 0 0 0px 1000px #1f2937 inset !important;
+            transition: background-color 5000s ease-in-out 0s;
         }
 
         input[type="password"]:focus {
@@ -483,7 +492,7 @@
             document.getElementById('apiKeyInput').value = savedKey;
         }
 
-        document.getElementById('problemInput'].addEventListener('paste', function (e) {
+        document.getElementById('problemInput').addEventListener('paste', function (e) {
             e.preventDefault();
             const clipboardData = e.clipboardData || window.clipboardData;
             const text = clipboardData.getData('text/plain');
@@ -561,12 +570,11 @@
             return;
         }
 
-        // Clean initial state: status bar sits still at 10% waiting for live data stream
         document.getElementById('cabinetFoldersContainer').innerHTML = `
             <div class='cabinet-folder'>
                 <div class='folder-tab'>Status & Progress</div>
                 <div class='folder-content'>
-                    Transmitting request to Gemini 3.5 Flash Lite (High-Capacity Free Tier)...
+                    Transmitting request to Gemini 3.5 Flash Lite...
                     <div class="progress-wrapper">
                         <div class="progress-bar" id="progressBar" style="width: 10%;"></div>
                     </div>
