@@ -96,7 +96,7 @@
             border-color: var(--accent);
         }
 
-        /* High-Reliability Input Box */
+        /* Fully Sanitized Auto-Stripping Input Box */
         textarea.math-textarea {
             width: 100%;
             min-height: 130px;
@@ -284,7 +284,8 @@
 
         <div class="control-group">
             <label for="problemInput">Paste Homework Text, Equations, Fractions, or Symbols</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: word problems, raw LaTeX like \frac{-3 \pm 2\sqrt{6}}{5}, or unicode symbols..."></textarea>
+            <!-- Built-in paste event listener auto-cleans invisible garbage layout code -->
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: word problems, equations, fractions, or symbols. Paste format issues are automatically fixed."></textarea>
         </div>
 
         <div class="checkbox-group">
@@ -328,6 +329,21 @@
         if (savedKey) {
             document.getElementById('apiKeyInput').value = savedKey;
         }
+
+        // AUTO-SANITIZER: Strips bad formatting/hidden website layout code on paste
+        document.getElementById('problemInput').addEventListener('paste', function (e) {
+            e.preventDefault();
+            const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            const selection = window.getSelection();
+            
+            // Clean weird invisible spacing or formatting artifacts
+            const cleanText = text.replace(/[\u200B-\u200D\uFEFF]/g, '');
+            
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + cleanText + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + cleanText.length;
+        });
     }
 
     function saveApiKey() {
@@ -423,7 +439,6 @@
             const rawJsonText = data.candidates[0].content.parts[0].text;
             const parsedResult = JSON.parse(rawJsonText);
 
-            // Wrap answer in math delimiters if not already wrapped
             let formattedAnswer = parsedResult.answer;
             if (!formattedAnswer.includes('$')) {
                 formattedAnswer = `$${formattedAnswer}$`;
@@ -439,7 +454,6 @@
                 explanationCard.style.display = 'none';
             }
 
-            // Render all KaTeX fractions and mathematical symbols visually
             setTimeout(renderMathOnScreen, 50);
 
         } catch (err) {
