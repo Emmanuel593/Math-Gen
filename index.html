@@ -214,68 +214,91 @@
             display: none;
         }
 
-        /* File Cabinet Style Layout */
+        /* File Cabinet Style Layout with Vibrant Colors */
         .cabinet-header {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 20px;
-            border-bottom: 2px solid var(--cabinet-gold);
+            border-bottom: 3px solid var(--cabinet-gold);
             padding-bottom: 10px;
         }
 
         .cabinet-header h2 {
             margin: 0;
             color: var(--cabinet-gold);
-            font-size: 1.5rem;
+            font-size: 1.6rem;
         }
 
         .cabinet-folder {
-            background-color: #1f2937;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: border-color 0.2s;
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+            border: 2px solid #374151;
+            border-left: 6px solid var(--accent);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
-        .cabinet-folder:hover {
-            border-color: var(--cabinet-gold);
+        .cabinet-folder:nth-child(odd) {
+            border-left-color: #ec4899; /* Vibrant pink accent variant */
+        }
+
+        .cabinet-folder:nth-child(3n) {
+            border-left-color: #10b981; /* Vibrant green accent variant */
         }
 
         .folder-tab {
             display: inline-block;
-            background-color: var(--cabinet-gold);
-            color: #0b0f19;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
             font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 6px 6px 0 0;
-            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        .problem-badge {
+            background-color: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #93c5fd;
+            margin-bottom: 14px;
+            font-size: 1.1rem;
         }
 
         .folder-content {
             font-size: 1.05rem;
-            line-height: 1.7;
+            line-height: 1.8;
             white-space: pre-wrap;
+            color: var(--text-primary);
         }
 
         .action-row {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
-        /* Clean Print Formatting */
+        /* Full Color Print Formatting */
         @media print {
             body { background: white !important; color: black !important; padding: 0 !important; }
             .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
             header, .card:not(.output-section), .btn-primary, .action-row { display: none !important; }
             .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; padding: 0 !important; margin: 0 !important; }
-            .cabinet-folder { background: #f9f9f9 !important; border: 1px solid #ddd !important; color: black !important; }
-            .folder-tab { background: #ddd !important; color: black !important; }
+            .cabinet-folder { background: #fdfdfd !important; border: 2px solid #cbd5e1 !important; border-left: 6px solid #4f46e5 !important; color: black !important; box-shadow: none !important; margin-bottom: 25px !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+            .folder-tab { background: #4f46e5 !important; color: white !important; }
+            .problem-badge { background-color: #f1f5f9 !important; border: 1px solid #cbd5e1 !important; color: #1e293b !important; }
+            .cabinet-header h2 { color: #b45309 !important; }
+            .folder-content { color: black !important; }
             .katex { color: black !important; }
         }
     </style>
@@ -307,7 +330,7 @@
 
         <div class="control-group">
             <label for="problemInput">Paste Your Confusing Homework, Test List, or Problem Set</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste your massive problem list or single confusing problem here... We will organize it into happy little folders."></textarea>
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste your massive problem list or single confusing problem here... We will organize it into beautiful colored folders."></textarea>
         </div>
 
         <div class="checkbox-group">
@@ -340,8 +363,7 @@
         </div>
         
         <div class="action-row">
-            <button class="btn-secondary" onclick="speakCabinet()">🔊 Read Cabinet Out Loud</button>
-            <button class="btn-secondary" style="background: #4f46e5;" onclick="window.print()">🖨️ Print Entire Cabinet</button>
+            <button class="btn-secondary" style="background: #4f46e5;" onclick="window.print()">🖨️ Print Entire Cabinet in Color</button>
         </div>
     </div>
 </div>
@@ -426,7 +448,7 @@
             return;
         }
 
-        document.getElementById('cabinetFoldersContainer').innerHTML = "<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Opening filing cabinet... organizing everything into crystal clear folders...</div></div>";
+        document.getElementById('cabinetFoldersContainer').innerHTML = "<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Opening filing cabinet... organizing everything into vibrant colored folders...</div></div>";
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
@@ -435,8 +457,9 @@
         - Analyze the user's input (it could be a single problem or a list of numbered problems).
         - For EVERY individual problem, create a separate cabinet folder.
         - Folder title format must strictly be: "Problem 1", "Problem 2", "Problem 3", etc.
-        - If the user wants explanations (${wantExplanation}), provide a very deep, rich, comprehensive, dummy-proof plain-English breakdown of every single step in detail so they fully understand how the math works. If explanation is turned off, provide just the clean final answer.
-        - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has two keys: "title" (e.g. "Problem 1") and "summary" (containing the answer and the detailed explanation if enabled).`;
+        - You MUST include the original problem statement or expression clearly at the top of each folder response.
+        - If the user wants explanations (${wantExplanation}), provide a very deep, rich, comprehensive, dummy-proof plain-English breakdown of every single step in detail so they fully understand how the math works. Handle any fractions, radicals, or symbols accurately. If explanation is turned off, provide just the clean final answer.
+        - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has three keys: "title" (e.g. "Problem 1"), "problem" (the original expression/question), and "summary" (containing the final answer and the detailed explanation if enabled).`;
 
         const userProblem = `Problem / Expression / Text List: ${problemText}`;
 
@@ -472,10 +495,15 @@
             let foldersHTML = "";
             if (parsedResult.folders && Array.isArray(parsedResult.folders)) {
                 parsedResult.folders.forEach((folder, index) => {
+                    const probTitle = folder.title || 'Problem ' + (index + 1);
+                    const origProblem = folder.problem || 'Expression not provided';
+                    const folderSummary = folder.summary || '';
+
                     foldersHTML += `
                         <div class="cabinet-folder">
-                            <div class="folder-tab">${folder.title || 'Problem ' + (index + 1)}</div>
-                            <div class="folder-content">${folder.summary}</div>
+                            <div class="folder-tab">${probTitle}</div>
+                            <div class="problem-badge">📌 Problem: ${origProblem}</div>
+                            <div class="folder-content">${folderSummary}</div>
                         </div>
                     `;
                 });
@@ -493,19 +521,6 @@
                     <div class="folder-content">Details: ${err.message}</div>
                 </div>`;
         }
-    }
-
-    function speakCabinet() {
-        const contentContainers = document.querySelectorAll('.folder-content');
-        let fullText = "";
-        contentContainers.forEach(el => { fullText += el.innerText + ". "; });
-        
-        if (!fullText || fullText.includes("Opening filing cabinet")) return;
-        
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(fullText);
-        utterance.rate = 1.0;
-        window.speechSynthesis.speak(utterance);
     }
 </script>
 
