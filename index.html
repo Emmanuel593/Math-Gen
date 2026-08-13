@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathGen Elite - Live AI Solver</title>
+    <title>MathGen Elite - The Ultimate Anti-Confusion Vault</title>
     
-    <!-- KaTeX for clean final answers -->
+    <!-- KaTeX for clean math rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -20,6 +20,7 @@
             --accent-hover: #4f46e5;
             --border: #1f2937;
             --success: #10b981;
+            --cabinet-gold: #f59e0b;
         }
 
         body {
@@ -35,7 +36,7 @@
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
         }
 
         header {
@@ -114,23 +115,6 @@
         textarea.math-textarea:focus {
             outline: none;
             border-color: var(--accent);
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--accent);
-            cursor: pointer;
         }
 
         .upload-dropzone {
@@ -213,31 +197,51 @@
             display: none;
         }
 
-        .output-box {
+        /* File Cabinet Style Layout */
+        .cabinet-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--cabinet-gold);
+            padding-bottom: 10px;
+        }
+
+        .cabinet-header h2 {
+            margin: 0;
+            color: var(--cabinet-gold);
+            font-size: 1.5rem;
+        }
+
+        .cabinet-folder {
             background-color: #1f2937;
-            border-left: 4px solid var(--success);
-            padding: 18px;
-            border-radius: 0 10px 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
             margin-bottom: 15px;
-            font-size: 1.3rem;
-            word-break: break-word;
-            line-height: 1.6;
+            transition: border-color 0.2s;
         }
 
-        .explanation-box {
-            background-color: #1f2937;
-            padding: 24px;
-            border-radius: 10px;
-            line-height: 1.8;
-            display: none;
-            font-size: 1.1rem;
+        .cabinet-folder:hover {
+            border-color: var(--cabinet-gold);
+        }
+
+        .folder-tab {
+            display: inline-block;
+            background-color: var(--cabinet-gold);
+            color: #0b0f19;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 6px 6px 0 0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .folder-content {
+            font-size: 1.05rem;
+            line-height: 1.7;
             white-space: pre-wrap;
-            font-family: inherit;
-        }
-
-        .explanation-box h3 {
-            margin-top: 0;
-            color: #818cf8;
         }
 
         .action-row {
@@ -253,9 +257,8 @@
             .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
             header, .card:not(.output-section), .btn-primary, .action-row { display: none !important; }
             .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; padding: 0 !important; margin: 0 !important; }
-            .output-box { background: #f4f4f4 !important; color: black !important; border-left: 4px solid #10b981 !important; font-size: 1.2rem !important; }
-            .explanation-box { background: #f9f9f9 !important; color: black !important; display: block !important; border: 1px solid #ddd !important; font-size: 1.1rem !important; }
-            .explanation-box h3 { color: #111 !important; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+            .cabinet-folder { background: #f9f9f9 !important; border: 1px solid #ddd !important; color: black !important; }
+            .folder-tab { background: #ddd !important; color: black !important; }
             .katex { color: black !important; }
         }
     </style>
@@ -265,7 +268,7 @@
 <div class="container">
     <header>
         <h1>MathGen Elite Suite</h1>
-        <p>Your Ultimate Live AI Math Assistant</p>
+        <p>Your Ultimate Anti-Confusion File Cabinet</p>
     </header>
 
     <div class="card">
@@ -286,13 +289,8 @@
         </div>
 
         <div class="control-group">
-            <label for="problemInput">Paste Homework Text, Equations, Fractions, or Symbols</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: word problems, equations, fractions, or symbols. Formatting issues are auto-fixed."></textarea>
-        </div>
-
-        <div class="checkbox-group">
-            <input type="checkbox" id="showExplanation" checked>
-            <label for="showExplanation" style="display:inline; margin:0; cursor:pointer;">Include full step-by-step detailed explanation</label>
+            <label for="problemInput">Paste Your Confusing Homework, Test List, or Problem Set</label>
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste your massive problem list or single confusing problem here... We will organize it into happy little folders."></textarea>
         </div>
 
         <div class="control-group">
@@ -307,21 +305,21 @@
             </div>
         </div>
 
-        <button class="btn-primary" onclick="solveProblemAI()">Solve Problem with Live AI</button>
+        <button class="btn-primary" onclick="solveProblemAI()">📂 Open The Happy File Cabinet</button>
     </div>
 
     <div class="card output-section" id="outputSection">
-        <h3 style="margin-top:0; color: var(--success);">Final Answer</h3>
-        <div class="output-box" id="finalAnswerDisplay">Analyzing...</div>
-
-        <div class="explanation-box" id="explanationCard">
-            <h3>Step-by-Step Breakdown</h3>
-            <div id="detailedExplanation">Analyzing...</div>
+        <div class="cabinet-header">
+            <h2>📁 The Answer Cabinet</h2>
+        </div>
+        
+        <div id="cabinetFoldersContainer">
+            <!-- Dynamic Folders Inserted Here -->
         </div>
         
         <div class="action-row">
-            <button class="btn-secondary" onclick="speakExplanation()">🔊 Read Aloud</button>
-            <button class="btn-secondary" style="background: #4f46e5;" onclick="window.print()">🖨️ Print Study Breakdown</button>
+            <button class="btn-secondary" onclick="speakCabinet()">🔊 Read Cabinet Out Loud</button>
+            <button class="btn-secondary" style="background: #4f46e5;" onclick="window.print()">🖨️ Print Entire Cabinet</button>
         </div>
     </div>
 </div>
@@ -333,7 +331,6 @@
             document.getElementById('apiKeyInput').value = savedKey;
         }
 
-        // Paste Sanitizer to prevent layout breaking
         document.getElementById('problemInput').addEventListener('paste', function (e) {
             e.preventDefault();
             const text = (e.originalEvent || e).clipboardData.getData('text/plain');
@@ -395,7 +392,6 @@
         const apiKey = document.getElementById('apiKeyInput').value.trim();
         const problemText = document.getElementById('problemInput').value.trim();
         const gradeLevel = document.getElementById('gradeSelect').value;
-        const wantExplanation = document.getElementById('showExplanation').checked;
 
         if (!apiKey) {
             alert('Please enter your Gemini API key at the top to use the live solver.');
@@ -407,18 +403,19 @@
             return;
         }
 
-        document.getElementById('finalAnswerDisplay').innerText = "Solving live...";
-        document.getElementById('detailedExplanation').innerText = "Thinking step-by-step...";
+        document.getElementById('cabinetFoldersContainer').innerHTML = "<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Opening filing cabinet... organizing everything into crystal clear folders...</div></div>";
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
-        const systemInstruction = `You are an expert ${gradeLevel} math tutor helping a student who learns best with simple, plain-English explanations. 
-        CRITICAL RULES:
-        - For the final answer, format math expressions inside standard LaTeX dollar signs ($...$) so they render properly.
-        - For the explanation, write everything out in clear, normal English sentences with zero raw code syntax or backslash markup so it reads easily. Structure it with numbered steps.
-        - Respond strictly as a valid JSON object with two keys: "answer" and "explanation".`;
+        const systemInstruction = `You are an expert ${gradeLevel} math tutor helping a student who gets overwhelmed easily. 
+        CRITICAL FORMATTING INSTRUCTIONS:
+        - Analyze the user's input (it could be a single problem or a list of numbered problems).
+        - For EVERY individual problem, create a separate cabinet folder containing:
+          1. The exact final answer (formatted with $...$ for nice math rendering if needed).
+          2. A super simple, happy, dumbass-proof plain-English brief breakdown explaining *why* and *how* it works step-by-step, as if explaining it to someone with zero background knowledge. Absolutely zero confusing raw backslash code blocks or jargon.
+        - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has two keys: "title" (e.g. "Problem 1 Folder") and "summary" (containing the final answer and the ultra-clear brief explanation).`;
 
-        const userProblem = `Problem / Expression / Text: ${problemText}`;
+        const userProblem = `Problem / Expression / Text List: ${problemText}`;
 
         let contentsArray = [{ text: userProblem }];
         if (uploadedFilePayload) {
@@ -449,36 +446,41 @@
             const rawJsonText = data.candidates[0].content.parts[0].text;
             const parsedResult = JSON.parse(rawJsonText);
 
-            let formattedAnswer = parsedResult.answer;
-            if (!formattedAnswer.includes('$')) {
-                formattedAnswer = `$${formattedAnswer}$`;
-            }
-
-            document.getElementById('finalAnswerDisplay').innerHTML = formattedAnswer;
-            
-            const explanationCard = document.getElementById('explanationCard');
-            if (wantExplanation) {
-                document.getElementById('detailedExplanation').innerText = parsedResult.explanation;
-                explanationCard.style.display = 'block';
+            let foldersHTML = "";
+            if (parsedResult.folders && Array.isArray(parsedResult.folders)) {
+                parsedResult.folders.forEach((folder, index) => {
+                    foldersHTML += `
+                        <div class="cabinet-folder">
+                            <div class="folder-tab">${folder.title || 'Folder ' + (index + 1)}</div>
+                            <div class="folder-content">${folder.summary}</div>
+                        </div>
+                    `;
+                });
             } else {
-                explanationCard.style.display = 'none';
+                foldersHTML = `<div class="cabinet-folder"><div class='folder-tab'>Result</div><div class='folder-content'>${JSON.stringify(parsedResult)}</div></div>`;
             }
 
+            document.getElementById('cabinetFoldersContainer').innerHTML = foldersHTML;
             setTimeout(renderMathOnScreen, 50);
 
         } catch (err) {
-            document.getElementById('finalAnswerDisplay').innerText = "Error executing request.";
-            document.getElementById('detailedExplanation').innerText = "Details: " + err.message;
-            document.getElementById('explanationCard').style.display = 'block';
+            document.getElementById('cabinetFoldersContainer').innerHTML = `
+                <div class="cabinet-folder" style="border-color: #ef4444;">
+                    <div class="folder-tab" style="background-color: #ef4444;">Error</div>
+                    <div class="folder-content">Details: ${err.message}</div>
+                </div>`;
         }
     }
 
-    function speakExplanation() {
-        const textToSpeak = document.getElementById('detailedExplanation').innerText;
-        if (!textToSpeak || textToSpeak.includes("Analyzing")) return;
+    function speakCabinet() {
+        const contentContainers = document.querySelectorAll('.folder-content');
+        let fullText = "";
+        contentContainers.forEach(el => { fullText += el.innerText + ". "; });
+        
+        if (!fullText || fullText.includes("Opening filing cabinet")) return;
         
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        const utterance = new SpeechSynthesisUtterance(fullText);
         utterance.rate = 1.0;
         window.speechSynthesis.speak(utterance);
     }
