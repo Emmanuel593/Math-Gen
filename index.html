@@ -241,7 +241,6 @@
             display: none;
         }
 
-        /* File Cabinet Style Layout with Cool Guy Colors (Blue/Cyan/Teal/Indigo) */
         .cabinet-header {
             display: flex;
             align-items: center;
@@ -338,7 +337,6 @@
             margin-top: 25px;
         }
 
-        /* Clean Color Print Formatting */
         @media print {
             body { background: white !important; color: black !important; padding: 0 !important; }
             .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
@@ -390,12 +388,12 @@
 
         <div class="control-group">
             <label for="problemInput">Paste Your Confusing Homework, Test List, or Problem Set</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: weird characters, messy web symbols, math equations, or full lists. All hidden artifacts are auto-stripped."></textarea>
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: messy text, word problems, science data, math equations... We will clean it up and break it down."></textarea>
         </div>
 
         <div class="checkbox-group">
             <input type="checkbox" id="includeExplanation" checked>
-            <label for="includeExplanation" style="display:inline; margin:0; cursor:pointer;">Include full step-by-step detailed explanation (Maximum Clarity Mode)</label>
+            <label for="includeExplanation" style="display:inline; margin:0; cursor:pointer;">Include ultra-detailed Goldfish Mode explanation (Zero jargon, full step-by-step logic)</label>
         </div>
 
         <div class="control-group">
@@ -514,30 +512,30 @@
         }
 
         if (!problemText && !uploadedFilePayload) {
-            alert('Please enter a math expression, paste text, or upload a PDF/image.');
+            alert('Please enter a problem, paste text, or upload a PDF/image.');
             return;
         }
 
-        document.getElementById('cabinetFoldersContainer').innerHTML = "<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Opening filing cabinet... organizing everything into vibrant colored folders...</div></div>";
+        document.getElementById('cabinetFoldersContainer').innerHTML = "<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Opening filing cabinet... auto-fixing formatting and organizing into crystal-clear folders...</div></div>";
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
         const instructionMode = wantExplanation 
-            ? "Provide a crystal-clear, zero-BS, ultra-fluent breakdown written like a real human explaining it directly to a friend. Walk through every single calculation clearly step by step. Then, put the final answer in a dedicated bold section at the absolute bottom." 
-            : "Provide ONLY the clean final answer. Do NOT include any explanations or extra text.";
+            ? "Your absolute primary goal is to explain this as if you are talking to someone who has zero prior background in this topic and needs maximum hand-holding (Goldfish Mode). First, automatically clean up and rewrite the raw problem text so it reads cleanly without any jumbled weird formatting. Then, write out a deeply detailed, conversational, step-by-step walkthrough. Explain every single action like a human buddy sitting next to them ('First, we look at... then we do this because...'). Never rush or skip steps. Finally, put the final answer in a massive, unmistakable highlighted box at the very bottom." 
+            : "First, automatically clean up and rewrite the raw problem text. Then provide ONLY the clean final answer in a prominent final answer box. Do NOT include any explanations or steps.";
 
-        const systemInstruction = `You are an elite mathematics tutor helping a student organize problems into a physical filing cabinet.
+        const systemInstruction = `You are an elite, patient mathematics and science tutor helping a student who gets easily overwhelmed.
         CRITICAL INSTRUCTIONS:
-        - Analyze the user's input (a single problem or list of numbered problems).
+        - Analyze the user's input (it might contain jumbled lines, messy web text, or equations from a scanned worksheet).
+        - Automatically fix and un-jumble the text so each distinct problem is cleanly structured.
         - For EVERY individual problem, create a separate cabinet folder.
         - Folder title format must strictly be: "Problem 1", "Problem 2", "Problem 3", etc.
-        - You MUST include the original problem statement or expression clearly at the top.
-        - NEVER use markdown hash symbols (#) for headers or text styling. Use clean paragraphs and line breaks instead.
+        - You MUST include the clean, auto-fixed original problem statement clearly at the top of each folder.
         - Mode requested: ${instructionMode}
-        - Handle any fractions, radicals, or symbols accurately using LaTeX inside dollar signs.
-        - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has three keys: "title" (e.g. "Problem 1"), "problem" (the original expression/question), and "summary" (containing the breakdown and the final answer box at the bottom).`;
+        - Handle numbers, formulas, fractions, and units accurately using LaTeX inside dollar signs.
+        - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has three keys: "title" (e.g. "Problem 1"), "problem" (the clean auto-fixed expression/question), and "summary" (containing the ultra-detailed conversational breakdown and the final answer box).`;
 
-        const userProblem = `Problem / Expression / Text List: ${problemText}`;
+        const userProblem = `Raw Un-formatted Input: ${problemText}`;
 
         let contentsArray = [{ text: userProblem }];
         if (uploadedFilePayload) {
@@ -580,7 +578,7 @@
                     foldersHTML += `
                         <div class="cabinet-folder">
                             <div class="folder-tab">${probTitle}</div>
-                            <div class="problem-badge">📌 Problem: ${origProblem}</div>
+                            <div class="problem-badge">📌 Cleaned Problem: ${origProblem}</div>
                             <div class="folder-content">${folderSummary}</div>
                         </div>
                     `;
