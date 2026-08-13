@@ -543,18 +543,18 @@
             return;
         }
 
-        // Initialize Cabinet with status and percentage bar
+        // Initialize Cabinet with status and stable percentage bar
         document.getElementById('cabinetFoldersContainer').innerHTML = `
             <div class='cabinet-folder'>
                 <div class='folder-tab'>Status & Progress</div>
                 <div class='folder-content'>
                     Opening filing cabinet... analyzing structure and preparing solution folders...
                     <div class="progress-wrapper">
-                        <div class="progress-bar" id="progressBar" style="width: 10%;"></div>
+                        <div class="progress-bar" id="progressBar" style="width: 15%;"></div>
                     </div>
                     <div class="progress-status-text">
                         <span id="progressMessage">Connecting to AI Vault...</span>
-                        <span id="progressPercent">10%</span>
+                        <span id="progressPercent">15%</span>
                     </div>
                 </div>
             </div>`;
@@ -588,19 +588,22 @@
             });
         }
 
-        // Update progress helper
-        function updateProgress(percent, msg) {
+        // True progress manager: strictly monotonic, never jumps backwards.
+        // Starts at 15%, climbs predictably per attempt without erratic bouncing.
+        function updateProgress(attemptNum, msg) {
             const bar = document.getElementById('progressBar');
             const txtMsg = document.getElementById('progressMessage');
             const txtPct = document.getElementById('progressPercent');
+            
+            // Calculate a steady forward percentage based on attempt count (maxes out visually at 90% until complete)
+            let calculatedPct = Math.min(15 + (attemptNum * 5), 90);
+            
             if (bar && txtMsg && txtPct) {
-                bar.style.width = percent + '%';
-                txtPct.innerText = percent + '%';
+                bar.style.width = calculatedPct + '%';
+                txtPct.innerText = calculatedPct + '%';
                 txtMsg.innerText = msg;
             }
         }
-
-        updateProgress(25, "Transmitting problem payload securely...");
 
         let attempt = 0;
         let delay = 2000;
@@ -609,9 +612,9 @@
 
         while (true) {
             attempt++;
-            try {
-                updateProgress(Math.min(30 + (attempt * 15), 85), `Contacting server (Attempt ${attempt})...`);
+            updateProgress(attempt, `Server busy / high demand. Auto-retrying (Attempt ${attempt})... holding ground for you!`);
 
+            try {
                 response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -624,9 +627,8 @@
                 data = await response.json();
 
                 if (response.status === 503 || response.status === 429 || (data.error && data.error.code === 429)) {
-                    updateProgress(40, `High demand detected! Auto-retrying (Attempt ${attempt})... hanging tight for you, bro!`);
                     await new Promise(resolve => setTimeout(resolve, delay));
-                    delay = Math.min(delay * 1.5, 10000);
+                    delay = Math.min(delay * 1.3, 10000); // Gradual backoff capped at 10s
                     continue;
                 }
 
@@ -634,11 +636,19 @@
                     throw new Error(data.error.message);
                 }
 
-                updateProgress(90, "Received response. Formatting & rendering folders...");
+                // Final success jump
+                const bar = document.getElementById('progressBar');
+                const txtMsg = document.getElementById('progressMessage');
+                const txtPct = document.getElementById('progressPercent');
+                if (bar && txtMsg && txtPct) {
+                    bar.style.width = '100%';
+                    txtPct.innerText = '100%';
+                    txtMsg.innerText = 'Success! Opening folders...';
+                }
                 break;
             } catch (err) {
-                updateProgress(50, `Connection glitch (${err.message}). Retrying (Attempt ${attempt})...`);
                 await new Promise(resolve => setTimeout(resolve, delay));
+                delay = Math.min(delay * 1.3, 10000);
             }
         }
 
@@ -646,7 +656,6 @@
             let htmlOutput = data.candidates[0].content.parts[0].text;
             htmlOutput = htmlOutput.replace(/```html/g, '').replace(/```/g, '').trim();
 
-            updateProgress(100, "Done! Opening folders...");
             document.getElementById('cabinetFoldersContainer').innerHTML = htmlOutput;
             setTimeout(renderMathOnScreen, 50);
 
