@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MathGen Elite - Live AI Solver</title>
+    <!-- MathLive for advanced mathematical symbol input and copy-pasting -->
+    <script src="https://unpkg.com/mathlive"></script>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -14,6 +16,7 @@
             --accent-hover: #4f46e5;
             --border: #1f2937;
             --success: #10b981;
+            --warning: #f59e0b;
         }
 
         body {
@@ -73,7 +76,7 @@
             letter-spacing: 0.05em;
         }
 
-        select, textarea, input[type="password"] {
+        select, input[type="password"] {
             width: 100%;
             padding: 12px 16px;
             background-color: #1f2937;
@@ -85,9 +88,26 @@
             transition: border-color 0.2s;
         }
 
-        select:focus, textarea:focus, input[type="password"]:focus {
+        select:focus, input[type="password"]:focus {
             outline: none;
             border-color: var(--accent);
+        }
+
+        /* MathLive Field Customization */
+        math-field {
+            width: 100%;
+            background-color: #1f2937;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 1.2rem;
+            box-sizing: border-box;
+        }
+
+        math-field:focus-within {
+            border-color: var(--accent);
+            outline: none;
         }
 
         .checkbox-group {
@@ -162,6 +182,24 @@
             background-color: var(--accent-hover);
         }
 
+        .btn-secondary {
+            background-color: #374151;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+
         .output-section {
             display: none;
         }
@@ -182,9 +220,10 @@
             background-color: #1f2937;
             padding: 20px;
             border-radius: 10px;
-            line-height: 1.6;
+            line-height: 1.7;
             display: none;
             white-space: pre-wrap;
+            font-size: 1.05rem;
         }
 
         .explanation-box h3 {
@@ -192,14 +231,22 @@
             color: #818cf8;
         }
 
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Clean Print Formatting */
         @media print {
-            body { background: white !important; color: black !important; }
-            .card:not(.output-section) { display: none !important; }
-            .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; padding: 0 !important; }
-            .output-box { background: #f9f9f9 !important; color: black !important; border-left: 4px solid #10b981 !important; }
-            .explanation-box { background: #f9f9f9 !important; color: black !important; display: block !important; }
-            .explanation-box h3 { color: #333 !important; }
-            button { display: none !important; }
+            body { background: white !important; color: black !important; padding: 0 !important; }
+            .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
+            header, .card:not(.output-section), .btn-primary, .action-row { display: none !important; }
+            .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; padding: 0 !important; margin: 0 !important; }
+            .output-box { background: #f4f4f4 !important; color: black !important; border-left: 4px solid #10b981 !important; font-size: 1.1rem !important; }
+            .explanation-box { background: #f9f9f9 !important; color: black !important; display: block !important; border: 1px solid #ddd !important; font-size: 1.1rem !important; }
+            .explanation-box h3 { color: #111 !important; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
         }
     </style>
 </head>
@@ -229,8 +276,8 @@
         </div>
 
         <div class="control-group">
-            <label for="problemInput">Type or Paste Your Problem</label>
-            <textarea id="problemInput" rows="4" placeholder="e.g., John can mow his lawn in 3 hours, and his sister Julie can mow it in 2 hours..."></textarea>
+            <label for="problemInput">Type or Paste Your Problem (Supports Square Roots, Fractions, Symbols)</label>
+            <math-field id="problemInput" placeholder="e.g., \sqrt{x^2 + y^2} or word problems..."></math-field>
         </div>
 
         <div class="checkbox-group">
@@ -249,7 +296,7 @@
             </div>
         </div>
 
-        <button class="btn-primary" onclick="solveProblemAI()">Solve Problem with Live AI</button>
+        <button class="btn-primary" onclick="solveProblemAI('solve')">Solve Problem with Live AI</button>
     </div>
 
     <div class="card output-section" id="outputSection">
@@ -261,7 +308,11 @@
             <div id="detailedExplanation">Analyzing...</div>
         </div>
         
-        <button class="btn-primary" style="margin-top: 20px; background: #374151;" onclick="window.print()">Print Study Breakdown</button>
+        <div class="action-row">
+            <button class="btn-secondary" onclick="speakExplanation()">🔊 Read Aloud</button>
+            <button class="btn-secondary" onclick="solveProblemAI('drill')">⚡ Give Me a Harder Practice Question</button>
+            <button class="btn-secondary" style="background: #4f46e5;" onclick="window.print()">🖨️ Print Study Breakdown</button>
+        </div>
     </div>
 </div>
 
@@ -293,9 +344,12 @@
         }
     }
 
-    async function solveProblemAI() {
+    let currentProblemContext = "";
+
+    async function solveProblemAI(mode = 'solve') {
         const apiKey = document.getElementById('apiKeyInput').value.trim();
-        const problemText = document.getElementById('problemInput').value.trim();
+        const mathField = document.getElementById('problemInput');
+        let problemText = mathField.value ? mathField.value : mathField.innerText.trim();
         const gradeLevel = document.getElementById('gradeSelect').value;
         const wantExplanation = document.getElementById('showExplanation').checked;
 
@@ -304,25 +358,39 @@
             return;
         }
 
+        if (mode === 'drill' && currentProblemContext) {
+            problemText = "Generate a brand new, slightly harder practice question based on this previous concept: " + currentProblemContext;
+        }
+
         if (!problemText && !base64Image) {
-            alert('Please enter a math problem or upload an image.');
+            alert('Please enter a math expression or upload an image.');
             return;
         }
 
-        document.getElementById('finalAnswerDisplay').innerText = "Solving live...";
+        currentProblemContext = problemText;
+
+        document.getElementById('finalAnswerDisplay').innerText = mode === 'drill' ? "Generating practice question..." : "Solving live...";
         document.getElementById('detailedExplanation').innerText = "Thinking step-by-step...";
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
-        const promptContent = `You are an expert ${gradeLevel} tutor. Solve the following math problem or worksheet image accurately. 
-        Provide your response strictly formatted in JSON with two keys:
-        1. "answer": The direct final answer (short and clear).
-        2. "explanation": A thorough, pure-detail step-by-step mathematical breakdown showing exactly how the answer was derived.
-        
-        Problem text: ${problemText}`;
+        const promptContent = mode === 'drill' ? 
+            `You are an expert ${gradeLevel} tutor. Based on the concept provided, generate a new, slightly more advanced practice question for the student, along with its step-by-step solution.
+            Provide your response strictly formatted in JSON with two keys:
+            1. "answer": The new drill question and its final answer.
+            2. "explanation": A thorough, step-by-step mathematical breakdown for solving this new drill question.
+            
+            Context/Concept: ${problemText}` :
+            `You are an expert ${gradeLevel} tutor. Solve the following math problem or worksheet image with extreme, rigorous depth. Do not skip intermediate steps, algebraic manipulations, or conceptual definitions. Every single step must be written out completely.
+            
+            Provide your response strictly formatted in JSON with two keys:
+            1. "answer": The direct final answer (clear and exact).
+            2. "explanation": An exhaustive, highly detailed step-by-step mathematical breakdown explaining the core concepts, every single intermediate equation, and exact calculations.
+            
+            Problem expression / text: ${problemText}`;
 
         let contentsArray = [{ text: promptContent }];
-        if (base64Image) {
+        if (base64Image && mode !== 'drill') {
             contentsArray.push({
                 inline_data: {
                     mime_type: "image/jpeg",
@@ -364,6 +432,16 @@
             document.getElementById('detailedExplanation').innerText = "Details: " + err.message;
             document.getElementById('explanationCard').style.display = 'block';
         }
+    }
+
+    function speakExplanation() {
+        const textToSpeak = document.getElementById('detailedExplanation').innerText;
+        if (!textToSpeak || textToSpeak.includes("Analyzing")) return;
+        
+        window.speechSynthesis.cancel(); // Stop any ongoing speech
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
     }
 </script>
 
