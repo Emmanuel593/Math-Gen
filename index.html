@@ -162,6 +162,7 @@
             margin-top: 15px;
             display: none;
             text-align: center;
+            color: var(--text-primary);
         }
 
         .preview-container img {
@@ -169,6 +170,8 @@
             max-height: 200px;
             border-radius: 8px;
             border: 1px solid var(--border);
+            display: none;
+            margin: 0 auto;
         }
 
         .btn-primary {
@@ -284,7 +287,7 @@
 
         <div class="control-group">
             <label for="problemInput">Paste Homework Text, Equations, Fractions, or Symbols</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: word problems, equations, fractions, or symbols. Paste format issues are automatically fixed."></textarea>
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: word problems, equations, fractions, or symbols. Formatting issues are auto-fixed."></textarea>
         </div>
 
         <div class="checkbox-group">
@@ -293,13 +296,14 @@
         </div>
 
         <div class="control-group">
-            <label>Or Upload Assignment / Problem Image</label>
+            <label>Upload Assignment PDF or Image</label>
             <div class="upload-dropzone">
-                <span id="uploadText">Click or drag & drop an image of your assignment here</span>
-                <input type="file" id="imageInput" accept="image/*" onchange="handleImageUpload(event)">
+                <span id="uploadText">Click or drag & drop a PDF worksheet or image here</span>
+                <input type="file" id="fileInput" accept="image/*,application/pdf" onchange="handleFileUpload(event)">
             </div>
             <div class="preview-container" id="previewContainer">
                 <img id="imagePreview" src="" alt="Assignment Preview">
+                <span id="fileLoadStatus"></span>
             </div>
         </div>
 
@@ -329,6 +333,7 @@
             document.getElementById('apiKeyInput').value = savedKey;
         }
 
+        // Paste Sanitizer to prevent layout breaking
         document.getElementById('problemInput').addEventListener('paste', function (e) {
             e.preventDefault();
             const text = (e.originalEvent || e).clipboardData.getData('text/plain');
@@ -345,16 +350,28 @@
         localStorage.setItem('gemini_math_key', key);
     }
 
-    let base64Image = null;
-    function handleImageUpload(event) {
+    let uploadedFilePayload = null;
+    let uploadedFileType = 'image/jpeg';
+
+    function handleFileUpload(event) {
         const file = event.target.files[0];
         if (file) {
+            uploadedFileType = file.type;
             const reader = new FileReader();
             reader.onload = function(e) {
-                base64Image = e.target.result.split(',')[1];
-                document.getElementById('imagePreview').src = e.target.result;
+                uploadedFilePayload = e.target.result.split(',')[1];
                 document.getElementById('previewContainer').style.display = 'block';
-                document.getElementById('uploadText').innerText = 'Image uploaded: ' + file.name;
+                
+                if (file.type === 'application/pdf') {
+                    document.getElementById('imagePreview').style.display = 'none';
+                    document.getElementById('fileLoadStatus').innerText = 'PDF Attached: ' + file.name;
+                } else {
+                    const img = document.getElementById('imagePreview');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('fileLoadStatus').innerText = 'Image Attached: ' + file.name;
+                }
+                document.getElementById('uploadText').innerText = 'File loaded successfully!';
             }
             reader.readAsDataURL(file);
         }
@@ -385,8 +402,8 @@
             return;
         }
 
-        if (!problemText && !base64Image) {
-            alert('Please enter a math expression or upload an image.');
+        if (!problemText && !uploadedFilePayload) {
+            alert('Please enter a math expression, paste text, or upload a PDF/image.');
             return;
         }
 
@@ -396,20 +413,19 @@
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
         const systemInstruction = `You are an expert ${gradeLevel} math tutor helping a student who learns best with simple, plain-English explanations. 
-        CRITICAL RULES FOR EXPLANATIONS:
-        - Do NOT use raw code blocks, backslashes like \\frac or \\sqrt, or confusing programming syntax in the explanation text.
-        - Write everything out in clear, normal English sentences as if you are talking directly to a student. Use plain text formatting like "divided by" or standard fraction bars (e.g., (top / bottom)) if needed, keeping it entirely readable.
-        - Structure the explanation with clear, numbered steps (Step 1, Step 2, etc.) so it's impossible to misunderstand.
-        - Respond strictly as a valid JSON object with two keys: "answer" (can use clean math symbols) and "explanation" (strictly plain English, zero broken code).`;
+        CRITICAL RULES:
+        - For the final answer, format math expressions inside standard LaTeX dollar signs ($...$) so they render properly.
+        - For the explanation, write everything out in clear, normal English sentences with zero raw code syntax or backslash markup so it reads easily. Structure it with numbered steps.
+        - Respond strictly as a valid JSON object with two keys: "answer" and "explanation".`;
 
         const userProblem = `Problem / Expression / Text: ${problemText}`;
 
         let contentsArray = [{ text: userProblem }];
-        if (base64Image) {
+        if (uploadedFilePayload) {
             contentsArray.push({
                 inline_data: {
-                    mime_type: "image/jpeg",
-                    data: base64Image
+                    mime_type: uploadedFileType,
+                    data: uploadedFilePayload
                 }
             });
         }
