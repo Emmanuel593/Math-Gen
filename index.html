@@ -47,22 +47,56 @@
             max-width: 1050px;
         }
 
+        /* Enhanced Dashboard Header with Visual Flair */
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(245, 158, 11, 0.08));
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(to bottom, #3b82f6, #f59e0b);
         }
 
         header h1 {
-            font-size: 2.4rem;
+            font-size: 2.8rem;
             margin: 0 0 10px 0;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8, #60a5fa);
+            background: linear-gradient(135deg, #60a5fa, #3b82f6, #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
         }
 
         header p {
             color: var(--text-secondary);
             margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .dashboard-badge-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .dash-chip {
+            background: rgba(31, 41, 55, 0.8);
+            border: 1px solid var(--border);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
         }
 
         .card {
@@ -199,11 +233,15 @@
             display: none;
         }
 
+        /* Highly Styled Print Header */
         .print-header-block {
             display: none;
-            border-bottom: 2px solid #333;
-            padding-bottom: 12px;
-            margin-bottom: 15px;
+            border-bottom: 3px solid #1e293b;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
         }
 
         .print-header-grid {
@@ -211,26 +249,27 @@
             grid-template-columns: 2fr 1fr 1fr;
             gap: 15px;
             font-size: 1rem;
-            color: #1e293b;
+            color: #0f172a;
         }
 
         .concept-map-card {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(14, 165, 233, 0.05));
             border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
             page-break-inside: avoid;
             break-inside: avoid;
         }
 
+        /* Cabinet Folders - Highly polished print aesthetics with bold contrast borders */
         .cabinet-folder {
             background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
             border: 2px solid #374151;
             border-left: 6px solid #3b82f6;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 14px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             position: relative;
             page-break-inside: avoid !important;
@@ -242,58 +281,58 @@
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: white;
             font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 6px 6px 0 0;
-            font-size: 0.9rem;
+            padding: 4px 10px;
+            border-radius: 4px 4px 0 0;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .problem-badge {
             background: rgba(59, 130, 246, 0.15);
             border: 1px solid rgba(59, 130, 246, 0.3);
-            padding: 12px 16px;
-            border-radius: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
             font-weight: 600;
             color: #93c5fd;
-            margin-bottom: 12px;
-            font-size: 1.05rem;
-            line-height: 1.4;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            line-height: 1.3;
         }
 
         .pitfall-alert {
             background: rgba(239, 68, 68, 0.15);
             border-left: 4px solid #ef4444;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 0 6px 6px 0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #fca5a5;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .method-block, .verification-block {
             background: rgba(16, 185, 129, 0.1);
             border-left: 4px solid #10b981;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 0 6px 6px 0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #a7f3d0;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .folder-content {
-            font-size: 0.95rem;
-            line-height: 1.5;
+            font-size: 0.85rem;
+            line-height: 1.4;
             color: var(--text-primary);
         }
 
         .final-answer-box {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
             border: 2px solid #10b981;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 12px;
-            font-size: 1.1rem;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 1rem;
             font-weight: 800;
             color: #34d399;
             text-align: center;
@@ -321,12 +360,12 @@
         }
 
         .sticky-note-box {
-            margin-top: 12px;
+            margin-top: 10px;
             background: #fef08a;
             color: #713f12;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
             font-weight: 600;
             border: 1px solid #facc15;
         }
@@ -335,8 +374,8 @@
             display: none;
             border: 2px dashed #94a3b8;
             border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
+            padding: 12px;
+            margin-top: 15px;
             background: #ffffff;
             color: #000000;
             page-break-inside: avoid;
@@ -359,9 +398,9 @@
 
         .quick-cut-sheet {
             display: none;
-            margin-top: 25px;
+            margin-top: 20px;
             border: 2px dashed #059669;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             background: #f0fdf4;
             color: #065f46;
@@ -415,34 +454,41 @@
             .container { max-width: 100% !important; }
             header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header, .formula-flyout-btn { display: none !important; }
             .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; }
-            .print-header-block { display: block !important; }
+            .print-header-block { display: block !important; border: 2px solid #0f172a !important; background: #ffffff !important; }
             .scratchpad-area { display: block !important; }
             .divider-page { display: flex !important; }
             .quick-cut-sheet { display: block !important; }
             
+            /* High-Contrast Standout Print Enhancements */
             .cabinet-folder { 
-                padding-left: 35px !important; 
+                padding: 12px 14px 12px 32px !important; 
                 background: #ffffff !important; 
-                border: 1px solid #cbd5e1 !important; 
-                border-left: 5px solid #2563eb !important; 
+                border: 2px solid #0f172a !important; 
+                border-left: 6px solid #2563eb !important; 
                 color: black !important; 
                 box-shadow: none !important; 
                 page-break-inside: avoid !important; 
                 break-inside: avoid !important;
-                margin-bottom: 15px !important;
+                margin-bottom: 12px !important;
             }
-            .folder-tab { background: #2563eb !important; color: white !important; }
-            .problem-badge { background-color: #f8fafc !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; }
+            .folder-tab { background: #2563eb !important; color: white !important; padding: 3px 10px !important; font-size: 0.8rem !important; font-weight: bold; }
+            .problem-badge { background-color: #f1f5f9 !important; color: #0f172a !important; border: 1.5px solid #cbd5e1 !important; padding: 8px !important; font-size: 0.9rem !important; margin-bottom: 8px !important; font-weight: bold; }
+            .pitfall-alert { background: #fef2f2 !important; border-left: 4px solid #dc2626 !important; color: #991b1b !important; padding: 6px 10px !important; font-weight: 600; }
+            .method-block, .verification-block { background: #ecfdf5 !important; border-left: 4px solid #059669 !important; color: #065f46 !important; padding: 6px 10px !important; font-weight: 600; }
+            .folder-content { font-size: 0.85rem !important; line-height: 1.4 !important; color: #1e293b !important; }
             .final-answer-box { 
                 background-color: #ecfdf5 !important; 
                 border: 2px solid #059669 !important; 
                 color: #047857 !important; 
                 filter: none !important; 
+                padding: 8px !important;
+                margin-top: 8px !important;
+                font-size: 0.95rem !important;
+                font-weight: 900 !important;
                 page-break-inside: avoid !important; 
                 break-inside: avoid !important; 
             }
             .final-answer-box::after { display: none !important; }
-            .folder-content { color: black !important; }
             .katex { color: black !important; }
         }
     </style>
@@ -467,6 +513,11 @@
     <header class="hide-in-focus">
         <h1>MathGen Elite Engine</h1>
         <p>Algebra 2 Study Suite & Print Vault</p>
+        <div class="dashboard-badge-row">
+            <span class="dash-chip">✨ Crystal Clear Explanations</span>
+            <span class="dash-chip">🎯 Zero-Orphan Print Engine</span>
+            <span class="dash-chip">⚡ Powered by Gemini 3.5</span>
+        </div>
     </header>
 
     <div class="card hide-in-focus">
@@ -494,8 +545,8 @@
             <div>
                 <label for="printDensity">Print Layout Density</label>
                 <select id="printDensity" onchange="applyDensityMode()">
+                    <option value="compact">Compact (Optimized for 90% Scale)</option>
                     <option value="standard">Standard Print Mode</option>
-                    <option value="compact">Compact (Saves Paper)</option>
                     <option value="large">Large Print (High Legibility)</option>
                 </select>
             </div>
@@ -583,7 +634,7 @@
 
         <div class="scratchpad-area" id="scratchpadArea">
             <h4 style="margin:0 0 10px 0; color:#475569; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em;">Scratchpad & Manual Working Space</h4>
-            <div style="height: 140px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;"></div>
+            <div style="height: 100px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;"></div>
         </div>
 
         <div class="action-row" style="margin-top:25px; display:flex; flex-wrap:wrap; gap:10px;">
@@ -665,15 +716,15 @@
         const folders = document.querySelectorAll('.cabinet-folder');
         folders.forEach(f => {
             if (mode === 'compact') {
-                f.style.padding = '12px';
-                f.style.marginBottom = '12px';
-                f.style.fontSize = '0.9rem';
+                f.style.padding = '10px 12px';
+                f.style.marginBottom = '10px';
+                f.style.fontSize = '0.85rem';
             } else if (mode === 'large') {
-                f.style.padding = '25px';
-                f.style.fontSize = '1.1rem';
+                f.style.padding = '22px';
+                f.style.fontSize = '1.05rem';
             } else {
-                f.style.padding = '18px';
-                f.style.fontSize = '0.95rem';
+                f.style.padding = '14px';
+                f.style.fontSize = '0.9rem';
             }
         });
     }
