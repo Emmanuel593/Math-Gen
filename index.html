@@ -10,7 +10,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     
-    <!-- Safe Fallback QRCode CDN -->
+    <!-- QRCode library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 
     <style>
@@ -341,7 +341,7 @@
             position: relative;
         }
         .quiz-hidden .final-answer-box::after {
-            content: "🔒 Click to Reveal Answer";
+            content: "Click to Reveal Answer";
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
@@ -362,18 +362,6 @@
             font-size: 0.9rem;
             font-weight: 600;
             border: 1px solid #facc15;
-        }
-
-        .review-tracker-bar {
-            margin-top: 15px;
-            background: rgba(255,255,255,0.05);
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            color: var(--text-secondary);
         }
 
         .scratchpad-area {
@@ -475,23 +463,23 @@
 </head>
 <body>
 
-<button class="formula-flyout-btn" onclick="toggleFormulaSidebar()">📐 Quick Formulas</button>
+<button class="formula-flyout-btn" onclick="toggleFormulaSidebar()">Quick Formulas</button>
 <div class="formula-sidebar" id="formulaSidebar">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
         <h3 style="margin:0; color:var(--accent);">Quick Reference</h3>
-        <button onclick="toggleFormulaSidebar()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
+        <button onclick="toggleFormulaSidebar()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">X</button>
     </div>
     <p><strong>Quadratic Formula:</strong> $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$</p>
-    <p><strong>Derivative Power Rule:</strong> $\frac{d}{dx}[x^n] = n x^{n-1}$</p>
-    <p><strong>Integration Power Rule:</strong> $\int x^n dx = \frac{x^{n+1}}{n+1} + C$</p>
-    <p><strong>Pythagorean Trig:</strong> $\sin^2\theta + \cos^2\theta = 1$</p>
-    <p><strong>Slope Formula:</strong> $m = \frac{y_2 - y_1}{x_2 - x_1}$</p>
+    <p><strong>Vertex Form:</strong> $f(x) = a(x - h)^2 + k$</p>
+    <p><strong>Slope-Intercept:</strong> $y = mx + b$</p>
+    <p><strong>Log Rules:</strong> $\log(xy) = \log(x) + \log(y)$</p>
+    <p><strong>Exponent Rule:</strong> $x^a \cdot x^b = x^{a+b}$</p>
 </div>
 
 <div class="container">
     <header class="hide-in-focus">
         <h1>MathGen Elite Engine</h1>
-        <p>Your Ultimate Anti-Confusion Vault & Print Study Suite</p>
+        <p>Algebra 2 Study Suite & Print Vault</p>
     </header>
 
     <div class="card hide-in-focus">
@@ -507,7 +495,7 @@
             </div>
             <div>
                 <label for="className">Class / Course</label>
-                <input type="text" id="className" placeholder="AP Calculus BC">
+                <input type="text" id="className" value="Algebra 2">
             </div>
             <div>
                 <label for="assignmentTitle">Assignment Title</label>
@@ -528,14 +516,14 @@
                 <label for="priorityFilter">Default Exam Priority</label>
                 <select id="priorityFilter">
                     <option value="all">Show All Problems</option>
-                    <option value="high">High Priority Only (⭐⭐⭐)</option>
+                    <option value="high">High Priority Only (High Importance)</option>
                 </select>
             </div>
         </div>
 
         <div class="control-group">
-            <label for="problemInput">Paste Your Problem Set or Raw Text</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste messy equations, word problems, or homework lists here..."></textarea>
+            <label for="problemInput">Paste Your Algebra 2 Problem Set or Raw Text</label>
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste polynomials, quadratics, systems of equations, or log problems here..."></textarea>
         </div>
 
         <div class="checkbox-group">
@@ -559,18 +547,18 @@
             </div>
         </div>
 
-        <button class="btn-primary" onclick="solveProblemAI()">📂 Open The Answer Cabinet & Build Study Suite</button>
+        <button class="btn-primary" onclick="solveProblemAI()">Open The Answer Cabinet & Build Study Suite</button>
     </div>
 
     <div class="divider-page" id="binderDividerPage">
-        <h1 style="font-size: 3rem; margin:0 0 15px 0; color:#1e3a8a;" id="dividerTitleText">SECTION DIVIDER</h1>
+        <h1 style="font-size: 3rem; margin:0 0 15px 0; color:#1e3a8a;" id="dividerTitleText">ALGEBRA 2</h1>
         <p style="font-size: 1.3rem; color:#475569;" id="dividerSubtitleText">Verified Study Sheets & Reference Vault</p>
     </div>
 
     <div class="card output-section" id="outputSection">
         <div class="cabinet-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid var(--cabinet-gold); padding-bottom:10px; margin-bottom:20px;">
-            <h2 style="margin:0; color:var(--cabinet-gold);">📁 Master Answer Cabinet</h2>
-            <button class="btn-secondary" style="margin:0; background:#4b5563;" onclick="toggleFocusMode()" id="focusToggleBtn">🌙 Focus Mode</button>
+            <h2 style="margin:0; color:var(--cabinet-gold);">Master Answer Cabinet</h2>
+            <button class="btn-secondary" style="margin:0; background:#4b5563;" onclick="toggleFocusMode()" id="focusToggleBtn">Focus Mode</button>
         </div>
 
         <div class="print-header-block" id="printHeaderBlock">
@@ -586,17 +574,12 @@
             </div>
         </div>
 
-        <div id="tableOfContentsContainer" class="card" style="background:#1f2937; margin-bottom:25px; display:none;">
-            <h3 style="margin-top:0; color:var(--accent);">📋 Table of Contents Index</h3>
-            <ul id="tocList" style="margin:0; padding-left:20px; line-height:1.8;"></ul>
-        </div>
-
         <div id="conceptMapContainer"></div>
         <div id="cabinetFoldersContainer"></div>
 
         <div class="quick-cut-sheet" id="quickCutSheet">
-            <h3 style="margin-top:0; color:#065f46;">✂️ Quick-Cut Formula & Cheat Sheet Cards</h3>
-            <p style="font-size:0.9rem; margin-bottom:10px;">Cut along dashed lines to keep these key formulas in your pocket.</p>
+            <h3 style="margin-top:0; color:#065f46;">Quick-Cut Formula & Cheat Sheet Cards</h3>
+            <p style="font-size:0.9rem; margin-bottom:10px;">Cut along dashed lines to keep these key Algebra 2 formulas in your pocket.</p>
             <div id="quickCutContent" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;"></div>
         </div>
 
@@ -606,10 +589,10 @@
         </div>
 
         <div class="action-row" style="margin-top:25px; display:flex; flex-wrap:wrap; gap:10px;">
-            <button class="btn-secondary" style="background: #2563eb;" onclick="window.print()">🖨️ Print Study Guide</button>
-            <button class="btn-secondary" style="background: #059669;" onclick="exportAnkiCSV()">🧠 Export Anki CSV</button>
-            <button class="btn-secondary" style="background: #7c3aed;" onclick="insertStickyNotePrompt()">📝 Add Sticky Note</button>
-            <button class="btn-secondary" style="background: #d97706;" onclick="toggleQuizMode()" id="quizModeBtn">⚡ Quiz Mode: OFF</button>
+            <button class="btn-secondary" style="background: #2563eb;" onclick="window.print()">Print Study Guide</button>
+            <button class="btn-secondary" style="background: #059669;" onclick="exportAnkiCSV()">Export Anki CSV</button>
+            <button class="btn-secondary" style="background: #7c3aed;" onclick="insertStickyNotePrompt()">Add Sticky Note</button>
+            <button class="btn-secondary" style="background: #d97706;" onclick="toggleQuizMode()" id="quizModeBtn">Quiz Mode: OFF</button>
         </div>
     </div>
 </div>
@@ -635,7 +618,6 @@
         if (container && typeof qrcode !== 'undefined') {
             try {
                 container.innerHTML = '';
-                // Type number 4, Error correction level L
                 var qr = qrcode(4, 'L');
                 qr.addData(window.location.href);
                 qr.make();
@@ -666,7 +648,7 @@
                     img.style.display = 'block';
                     document.getElementById('fileLoadStatus').innerText = 'Image Attached: ' + file.name;
                 }
-                document.getElementById('uploadText').innerText = 'OCR Smart-Correction Ready!';
+                document.getElementById('uploadText').innerText = 'Algebra 2 OCR Ready!';
             }
             reader.readAsDataURL(file);
         }
@@ -720,7 +702,7 @@
         const btn = document.getElementById('quizModeBtn');
         const folders = document.querySelectorAll('.cabinet-folder');
         if (quizModeActive) {
-            btn.innerText = "⚡ Quiz Mode: ON";
+            btn.innerText = "Quiz Mode: ON";
             btn.style.background = "#059669";
             folders.forEach(f => {
                 f.classList.add('quiz-hidden');
@@ -728,7 +710,7 @@
                 if (box) box.onclick = () => f.classList.remove('quiz-hidden');
             });
         } else {
-            btn.innerText = "⚡ Quiz Mode: OFF";
+            btn.innerText = "Quiz Mode: OFF";
             btn.style.background = "#d97706";
             folders.forEach(f => f.classList.remove('quiz-hidden'));
         }
@@ -740,10 +722,10 @@
         const btn = document.getElementById('focusToggleBtn');
         if (focusModeActive) {
             document.body.classList.add('focus-mode');
-            btn.innerText = "☀️ Exit Focus";
+            btn.innerText = "Exit Focus";
         } else {
             document.body.classList.remove('focus-mode');
-            btn.innerText = "🌙 Focus Mode";
+            btn.innerText = "Focus Mode";
         }
     }
 
@@ -759,7 +741,7 @@
                     noteBox.className = 'sticky-note-box';
                     target.appendChild(noteBox);
                 }
-                noteBox.innerHTML = `📌 <strong>Personal Note:</strong> ${noteText}`;
+                noteBox.innerHTML = `<strong>Personal Note:</strong> ${noteText}`;
             }
         }
     }
@@ -779,7 +761,7 @@
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "mathgen_anki_flashcards.csv");
+        link.setAttribute("download", "algebra2_flashcards.csv");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -791,8 +773,8 @@
         const wantConceptMap = document.getElementById('includeConceptMap').checked;
 
         const sName = document.getElementById('studentName').value || 'Student';
-        const cName = document.getElementById('className').value || 'General Course';
-        const aTitle = document.getElementById('assignmentTitle').value || 'Master Reference Sheet';
+        const cName = document.getElementById('className').value || 'Algebra 2';
+        const aTitle = document.getElementById('assignmentTitle').value || 'Problem Set';
 
         document.getElementById('lblStudentName').innerText = sName;
         document.getElementById('lblClassName').innerText = cName;
@@ -805,26 +787,26 @@
             return;
         }
 
-        document.getElementById('cabinetFoldersContainer').innerHTML = `<div class='cabinet-folder'><div class='folder-content'>Processing OCR and building study engine packets...</div></div>`;
+        document.getElementById('cabinetFoldersContainer').innerHTML = `<div class='cabinet-folder'><div class='folder-content'>Solving Algebra 2 problems cleanly...</div></div>`;
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
-        const systemInstruction = "You are an elite academic tutor and problem solver powering MathGen Elite.\n" +
+        const systemInstruction = "You are an elite Algebra 2 tutor and problem solver.\n" +
             "CRITICAL INSTRUCTIONS:\n" +
-            "1. Apply OCR Smart-Correction to fix messy text, misrecognized math symbols, or scanned notes.\n" +
-            "2. Break every distinct problem into a separate HTML cabinet folder (<div class=\"cabinet-folder\">).\n" +
-            "3. For each problem, include:\n" +
+            "1. Solve problems strictly at the Algebra 2 level (quadratics, polynomials, rational functions, logarithms, systems of equations, complex numbers).\n" +
+            "2. Ensure all math formatting uses standard, clean LaTeX syntax inside standard dollar signs or brackets (e.g., $x^2 + 5x + 6 = 0$). Avoid any broken or non-standard symbols.\n" +
+            "3. Break every distinct problem into a separate HTML cabinet folder (<div class=\"cabinet-folder\">).\n" +
+            "4. For each problem, include:\n" +
             "   - A problem badge (<div class=\"problem-badge\">)\n" +
-            "   - Step-by-step logic with Variable/Unit Analysis & dimensional checks\n" +
+            "   - Clean step-by-step logic\n" +
             "   - A 'Common Pitfall / Trap' warning box (<div class=\"pitfall-alert\">)\n" +
             "   - An alternative method breakdown (<div class=\"method-block\">)\n" +
             "   - A verification proof block (<div class=\"verification-block\">)\n" +
             "   - A final answer box (<div class=\"final-answer-box\">)\n" +
-            "4. Include an Exam Priority tag (<div class=\"priority-badge\">⭐⭐⭐ High Priority</div>) on key problems.\n" +
-            "5. If requested, generate a Visual Concept Map at the top (<div class=\"concept-map-card\">) illustrating problem logic.\n" +
-            "6. Use proper LaTeX inside dollar signs for all math expressions.";
+            "5. Include a Priority tag (<div class=\"priority-badge\">High Priority</div>) on key problems if applicable.\n" +
+            "6. If requested, generate a Visual Concept Map at the top (<div class=\"concept-map-card\">) illustrating problem logic.";
 
-        let contentsArray = [{ text: problemText || "Analyze attached assignment image/PDF." }];
+        let contentsArray = [{ text: problemText || "Analyze attached Algebra 2 assignment image/PDF." }];
         if (uploadedFilePayload) {
             contentsArray.push({ inline_data: { mime_type: uploadedFileType, data: uploadedFilePayload } });
         }
@@ -848,31 +830,14 @@
             document.getElementById('cabinetFoldersContainer').innerHTML = htmlOutput;
             
             const folders = document.querySelectorAll('.cabinet-folder');
-            const tocList = document.getElementById('tocList');
-            tocList.innerHTML = '';
             let quickCutHTML = '';
 
             folders.forEach((f, idx) => {
                 const badge = f.querySelector('.problem-badge');
-                const title = badge ? badge.innerText.substring(0, 45) + '...' : `Problem ${idx + 1}`;
-                
-                const li = document.createElement('li');
-                li.innerHTML = `<strong>Problem ${idx + 1}:</strong> ${title}`;
-                tocList.appendChild(li);
-
-                const tracker = document.createElement('div');
-                tracker.className = 'review-tracker-bar';
-                tracker.innerHTML = `<span><strong>Review Schedule:</strong></span>
-                    <label><input type="checkbox"> Day 1</label>
-                    <label><input type="checkbox"> Day 3</label>
-                    <label><input type="checkbox"> Day 7</label>`;
-                f.appendChild(tracker);
-
-                quickCutHTML += `<div style="border:1px solid #10b981; padding:10px; border-radius:6px; background:#fff;"><strong>P.${idx+1} Rule:</strong> Key formula/concept extracted.</div>`;
+                quickCutHTML += `<div style="border:1px solid #10b981; padding:10px; border-radius:6px; background:#fff;"><strong>P.${idx+1} Key Formula</strong></div>`;
             });
 
             if (folders.length > 0) {
-                document.getElementById('tableOfContentsContainer').style.display = 'block';
                 document.getElementById('quickCutContent').innerHTML = quickCutHTML;
                 document.getElementById('binderDividerPage').style.display = 'flex';
             }
