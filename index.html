@@ -241,7 +241,7 @@
             display: none;
         }
 
-        /* File Cabinet Style Layout with Vibrant Colors & Smooth Entrance */
+        /* File Cabinet Style Layout with Vibrant Colors */
         .cabinet-header {
             display: flex;
             align-items: center;
@@ -314,27 +314,6 @@
             color: var(--text-primary);
         }
 
-        .step-item {
-            background-color: rgba(17, 24, 39, 0.6);
-            border-left: 3px solid #10b981;
-            padding: 12px 16px;
-            margin: 10px 0;
-            border-radius: 0 8px 8px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .answer-highlight {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15));
-            border: 1px solid #10b981;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-weight: 700;
-            color: #34d399;
-            margin-top: 14px;
-            font-size: 1.2rem;
-            display: inline-block;
-        }
-
         .action-row {
             display: flex;
             flex-wrap: wrap;
@@ -342,19 +321,16 @@
             margin-top: 25px;
         }
 
-        /* Anti-Cutoff & Full Color Print Formatting */
+        /* Clean Print Formatting: Hidden Cabinet Header & Vibrant Color Preservation */
         @media print {
             body { background: white !important; color: black !important; padding: 0 !important; }
             .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
-            header, .card:not(.output-section), .btn-primary, .action-row { display: none !important; }
+            header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header { display: none !important; }
             .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; padding: 0 !important; margin: 0 !important; }
-            .cabinet-folder { background: #ffffff !important; border: 2px solid #e2e8f0 !important; border-left: 6px solid #4f46e5 !important; color: black !important; box-shadow: none !important; margin-bottom: 30px !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+            .cabinet-folder { background: #ffffff !important; border: 2px solid #cbd5e1 !important; border-left: 6px solid #4f46e5 !important; color: black !important; box-shadow: none !important; margin-bottom: 25px !important; page-break-inside: avoid !important; break-inside: avoid !important; }
             .folder-tab { background: #4f46e5 !important; color: white !important; box-shadow: none !important; }
-            .problem-badge { background-color: #f8fafc !important; border: 1px solid #cbd5e1 !important; color: #0f172a !important; box-shadow: none !important; }
-            .cabinet-header h2 { color: #b45309 !important; border-bottom: 3px solid #b45309 !important; }
+            .problem-badge { background-color: #f1f5f9 !important; border: 1px solid #cbd5e1 !important; color: #0f172a !important; box-shadow: none !important; }
             .folder-content { color: black !important; }
-            .step-item { background-color: #f8fafc !important; border-left: 3px solid #059669 !important; box-shadow: none !important; }
-            .answer-highlight { background-color: #ecfdf5 !important; border: 1px solid #059669 !important; color: #047857 !important; }
             .katex { color: black !important; }
         }
     </style>
@@ -375,12 +351,13 @@
 
         <div class="control-group">
             <label for="problemInput">Paste Your Confusing Homework, Test List, or Problem Set</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste your massive problem list or single confusing problem here... We will organize it into beautiful colored folders."></textarea>
+            <!-- Heavy-duty sanitized paste box -->
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here: weird characters, messy web symbols, math equations, or full lists. All hidden artifacts are auto-stripped."></textarea>
         </div>
 
         <div class="checkbox-group">
             <input type="checkbox" id="includeExplanation" checked>
-            <label for="includeExplanation" style="display:inline; margin:0; cursor:pointer;">Include full step-by-step detailed explanation</label>
+            <label for="includeExplanation" style="display:inline; margin:0; cursor:pointer;">Include full step-by-step detailed explanation (Dumbass Mode)</label>
         </div>
 
         <div class="control-group">
@@ -395,7 +372,7 @@
             </div>
         </div>
 
-        <button class="btn-primary" onclick="solveProblemAI()">📂 Open The Happy File Cabinet</button>
+        <button class="btn-primary" onclick="solveProblemAI()">📂 Open The Answer Cabinet</button>
     </div>
 
     <div class="card output-section" id="outputSection">
@@ -420,10 +397,18 @@
             document.getElementById('apiKeyInput').value = savedKey;
         }
 
+        // FULLY BULLETPROOF PASTE SANITIZER: Strips weird unicode, hidden HTML, bad web font artifacts
         document.getElementById('problemInput').addEventListener('paste', function (e) {
             e.preventDefault();
-            const text = (e.originalEvent || e).clipboardData.getData('text/plain');
-            const cleanText = text.replace(/[\u200B-\u200D\uFEFF]/g, '');
+            const clipboardData = e.clipboardData || window.clipboardData;
+            const text = clipboardData.getData('text/plain');
+            
+            // Normalize weird whitespace, invisible layout characters, and strange symbol codes
+            const cleanText = text
+                .replace(/[\u200B-\u200D\uFEFF]/g, '') // Zero-width spaces
+                .replace(/\u00A0/g, ' ')                  // Non-breaking spaces to normal spaces
+                .replace(/\r\n/g, '\n');                  // Normalize line endings
+
             const start = this.selectionStart;
             const end = this.selectionEnd;
             this.value = this.value.substring(0, start) + cleanText + this.value.substring(end);
@@ -496,13 +481,13 @@
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
-        const systemInstruction = `You are an elite mathematics tutor helping a student who wants gorgeous, rich, dummy-proof explanations with zero BS.
+        const systemInstruction = `You are an elite mathematics tutor helping a student who wants extremely clear, dummy-proof, bite-sized explanations with zero BS.
         CRITICAL FORMATTING INSTRUCTIONS:
         - Analyze the user's input (a single problem or list of numbered problems).
         - For EVERY individual problem, create a separate cabinet folder.
         - Folder title format must strictly be: "Problem 1", "Problem 2", "Problem 3", etc.
         - You MUST include the original problem statement or expression clearly at the top.
-        - If the user wants explanations (${wantExplanation}), provide a deeply detailed, beautifully structured breakdown using structured steps (e.g. format individual steps cleanly inside HTML blocks or bullet points, use zero raw asterisks for headers). Explain the *why* and *how* like an A+ student tutor. Handle any fractions, radicals, or symbols accurately using LaTeX inside dollar signs.
+        - If the user wants explanations (${wantExplanation}), provide a deeply detailed, structured breakdown using simple everyday logic. Explain every single step like you're talking to someone who needs maximum clarity. Handle any fractions, radicals, or symbols accurately using LaTeX inside dollar signs.
         - If explanation is turned off, provide just the clean final answer.
         - Respond strictly as a valid JSON object containing an array called "folders", where each object in the array has three keys: "title" (e.g. "Problem 1"), "problem" (the original expression/question), and "summary" (containing the final answer and the detailed explanation if enabled).`;
 
@@ -544,7 +529,6 @@
                     const origProblem = folder.problem || 'Expression not provided';
                     let folderSummary = folder.summary || '';
 
-                    // Clean up any raw markdown bold asterisks if the AI accidentally generated them, turning them into styled step elements
                     folderSummary = folderSummary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
                     foldersHTML += `
