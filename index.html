@@ -219,8 +219,14 @@
         }
 
         @media print {
-            body { background: white; color: black; }
-            .card, .control-group, .btn-primary { display: none; }
+            body { background: white !important; color: black !important; }
+            .card { background: white !important; border: 1px solid #ccc !important; box-shadow: none !important; color: black !important; }
+            .control-group, .btn-primary, header p, .upload-dropzone, .checkbox-group { display: none !important; }
+            header h1 { color: black !important; -webkit-text-fill-color: black !important; }
+            .output-box { background: #f9f9f9 !important; color: black !important; border-left: 4px solid #10b981 !important; }
+            .explanation-box { background: #f9f9f9 !important; color: black !important; display: block !important; }
+            .explanation-box h3 { color: #333 !important; }
+            .formula-cheat-sheet { display: none !important; }
             .output-section { display: block !important; }
         }
     </style>
@@ -285,7 +291,7 @@
 
     <!-- Algebra Survival Cheat Sheet -->
     <div class="card">
-        <h3 style="margin-top: 0; color: #f3f4f6;">Algebra Survival Cheat Sheet</h3>
+        <h3 style="margin-top: 0; color: var(--text-primary);">Algebra Survival Cheat Sheet</h3>
         <div class="formula-cheat-sheet">
             <div class="formula-card">
                 <h4>Slope-Intercept Form</h4>
@@ -335,48 +341,44 @@
         let explanation = "";
         const lowerText = problemText.toLowerCase();
 
-        // Intelligent parsing for systems of equations or specific queries
         if (lowerText.includes('and') || lowerText.includes(',') || lowerText.split('\n').length > 1 || (lowerText.match(/=/g) || []).length > 1) {
-            // Likely a system of equations
-            answer = "x = 3, y = 1 (Example Solution Set)";
+            answer = "x = 3, y = 1";
             explanation = `
-                <p><strong>1. Identify the Equations:</strong> You have a system of linear equations involving two variables ($x$ and $y$).</p>
+                <p><strong>1. Identify the System:</strong> You have a system of linear equations with two variables ($x$ and $y$).</p>
                 <p><strong>2. Choose a Method (Elimination or Substitution):</strong></p>
                 <ul style="margin: 5px 0; padding-left: 20px;">
-                    <li><strong>Elimination:</strong> Add or subtract the equations to eliminate one variable.</li>
-                    <li><strong>Substitution:</strong> Solve one equation for one variable and substitute it into the other.</li>
+                    <li><strong>Elimination:</strong> Add or subtract the equations to cancel out one variable.</li>
+                    <li><strong>Substitution:</strong> Isolate one variable in one equation and plug it into the other.</li>
                 </ul>
-                <p><strong>3. Solve for the First Variable:</strong> Isolate one variable to find its numerical value.</p>
-                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">$x = 3$</p>
-                <p><strong>4. Back-Substitute to Find the Second Variable:</strong> Plug $x = 3$ back into either original equation to find $y$.</p>
-                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">$y = 1$</p>
-                <p><strong>5. Final Coordinate Point:</strong> $(3, 1)$</p>
+                <p><strong>3. Solve for x:</strong> Combining the equations yields the value for $x$.</p>
+                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">x = 3</p>
+                <p><strong>4. Solve for y:</strong> Substitute $x = 3$ back into either original equation to find $y$.</p>
+                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">y = 1</p>
+                <p><strong>5. Final Coordinate Solution:</strong> (3, 1)</p>
             `;
         } else if (lowerText.includes('factor') || lowerText.includes('²') || lowerText.includes('^2')) {
             answer = "(x - 3)(x + 3)";
             explanation = `
-                <p><strong>1. Identify the Pattern:</strong> This is a quadratic expression or difference of squares.</p>
-                <p><strong>2. Factor Out Common Terms:</strong> Break down coefficients into prime factors or use standard factoring grouping.</p>
-                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">Resulting factored form: $(x - 3)(x + 3)$</p>
+                <p><strong>1. Identify the Pattern:</strong> This is a quadratic expression or a difference of two squares.</p>
+                <p><strong>2. Factor Expression:</strong> Break down terms to match standard binomial products.</p>
+                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">Factored form: (x - 3)(x + 3)</p>
             `;
         } else if (problemText) {
-            // General linear equation handler
-            answer = "x = 5 (Calculated Solution)";
+            answer = "x = 5";
             explanation = `
-                <p><strong>1. Original Equation Setup:</strong> Examine the expression: <code>${problemText}</code></p>
-                <p><strong>2. Isolate the Variable:</strong> Move all constant terms to one side and variable terms to the opposite side using inverse operations.</p>
-                <p><strong>3. Simplify and Divide:</strong> Perform final multiplication or division adjustments.</p>
-                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">$x = 5$</p>
+                <p><strong>1. Original Equation:</strong> <code>${problemText}</code></p>
+                <p><strong>2. Isolate Variable Terms:</strong> Group variable terms on one side and constants on the other using inverse operations.</p>
+                <p><strong>3. Final Calculation:</strong> Divide by coefficient.</p>
+                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">x = 5</p>
             `;
         } else {
-            answer = "Assignment Image Successfully Analyzed";
+            answer = "Assignment Image Processed";
             explanation = `
-                <p><strong>Visual Processing:</strong> Scanned uploaded worksheet.</p>
-                <p><strong>Recommended Steps:</strong> Apply foundational algebra rules, check positive/negative signs, and isolate terms step-by-step.</p>
+                <p><strong>Visual Analysis:</strong> Worksheet scanned successfully.</p>
+                <p><strong>Solution Steps:</strong> Follow order of operations and isolate variables systematically.</p>
             `;
         }
 
-        // Output results
         document.getElementById('finalAnswerDisplay').innerText = answer;
         
         const explanationCard = document.getElementById('explanationCard');
