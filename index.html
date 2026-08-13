@@ -90,10 +90,10 @@
             border-color: var(--accent);
         }
 
-        /* Clean Native Textarea that Accepts All Symbols & Multi-line Pasting */
+        /* Fully Reliable Universal Input Field */
         textarea.math-textarea {
             width: 100%;
-            min-height: 130px;
+            min-height: 140px;
             background-color: #1f2937;
             border: 1px solid var(--border);
             color: var(--text-primary);
@@ -103,6 +103,7 @@
             box-sizing: border-box;
             resize: vertical;
             font-family: inherit;
+            line-height: 1.5;
         }
 
         textarea.math-textarea:focus {
@@ -224,6 +225,7 @@
             display: none;
             font-size: 1.05rem;
             white-space: pre-wrap;
+            font-family: inherit;
         }
 
         .explanation-box h3 {
@@ -276,8 +278,8 @@
         </div>
 
         <div class="control-group">
-            <label for="problemInput">Paste Your Problem, Fractions, or Symbols Here</label>
-            <textarea id="problemInput" class="math-textarea" placeholder="Paste equations, fractions like (-3 ± √(6)) / 5, roots, or word problem text directly..."></textarea>
+            <label for="problemInput">Paste Anything: Math Problems, Homework Text, Fractions, or Symbols</label>
+            <textarea id="problemInput" class="math-textarea" placeholder="Paste anything here cleanly... Multi-line text, symbols, fractions, radicals, etc. won't break."></textarea>
         </div>
 
         <div class="checkbox-group">
@@ -366,8 +368,8 @@
 
         const systemInstruction = `You are an elite ${gradeLevel} mathematics expert and tutor. Solve the provided math problem with absolute precision. 
         Formatting instructions:
-        - Output exact clean text formatting for fractions (e.g., using standard notation like (-3 ± √(6)) / 5 or clear fractions). Do not use messy raw LaTeX code blocks unless necessary, make it readable and clean for humans.
-        - Structure your step-by-step explanation with clear numbered steps and clean line breaks so it reads like a pristine study guide.
+        - Output exact clean text formatting for final answers (e.g., proper fractional notation like (-3 ± √(6)) / 5 or exact simplified forms). 
+        - Structure your step-by-step explanation with clear numbered steps, exact formulas, and clean line breaks so it reads like a pristine study guide.
         - Respond strictly as a JSON object with two keys: "answer" and "explanation".`;
 
         const userProblem = `Problem / Expression: ${problemText}`;
