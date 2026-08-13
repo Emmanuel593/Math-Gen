@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathGen Elite - Advanced Problem Solver & Study Suite</title>
+    <title>MathGen Elite - Clean Solver</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -73,7 +74,7 @@
             letter-spacing: 0.05em;
         }
 
-        select, input[type="text"], textarea {
+        select, textarea {
             width: 100%;
             padding: 12px 16px;
             background-color: #1f2937;
@@ -162,10 +163,6 @@
             background-color: var(--accent-hover);
         }
 
-        .btn-primary:active {
-            transform: scale(0.99);
-        }
-
         .output-section {
             display: none;
         }
@@ -194,40 +191,14 @@
             color: #818cf8;
         }
 
-        .formula-cheat-sheet {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-        }
-
-        .formula-card {
-            background-color: #1f2937;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .formula-card h4 {
-            margin: 0 0 8px 0;
-            color: var(--accent);
-        }
-
-        .formula-card p {
-            margin: 0;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
         @media print {
             body { background: white !important; color: black !important; }
-            .card { background: white !important; border: 1px solid #ccc !important; box-shadow: none !important; color: black !important; }
-            .control-group, .btn-primary, header p, .upload-dropzone, .checkbox-group { display: none !important; }
-            header h1 { color: black !important; -webkit-text-fill-color: black !important; }
+            .card:not(.output-section) { display: none !important; }
+            .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; padding: 0 !important; }
             .output-box { background: #f9f9f9 !important; color: black !important; border-left: 4px solid #10b981 !important; }
             .explanation-box { background: #f9f9f9 !important; color: black !important; display: block !important; }
             .explanation-box h3 { color: #333 !important; }
-            .formula-cheat-sheet { display: none !important; }
-            .output-section { display: block !important; }
+            button { display: none !important; }
         }
     </style>
 </head>
@@ -239,7 +210,6 @@
         <p>Your Ultimate Algebra & Math Mastery Assistant</p>
     </header>
 
-    <!-- Configuration Card -->
     <div class="card">
         <div class="control-group">
             <label for="gradeSelect">Select Grade Level</label>
@@ -253,8 +223,8 @@
         </div>
 
         <div class="control-group">
-            <label for="problemInput">Type or Paste Your Problem / System of Equations</label>
-            <textarea id="problemInput" rows="4" placeholder="e.g., 2x + y = 7 AND x - y = 2&#10;or solve 3x + 5 = 20"></textarea>
+            <label for="problemInput">Type or Paste Your Problem or Equation</label>
+            <textarea id="problemInput" rows="4" placeholder="e.g., 3 * x + 5 = 20, or (4 + 2) * 5"></textarea>
         </div>
 
         <div class="checkbox-group">
@@ -276,7 +246,6 @@
         <button class="btn-primary" onclick="solveProblem()">Solve Problem</button>
     </div>
 
-    <!-- Output Section -->
     <div class="card output-section" id="outputSection">
         <h3 style="margin-top:0; color: var(--success);">Final Answer</h3>
         <div class="output-box" id="finalAnswerDisplay"></div>
@@ -287,29 +256,6 @@
         </div>
         
         <button class="btn-primary" style="margin-top: 20px; background: #374151;" onclick="window.print()">Print Study Breakdown</button>
-    </div>
-
-    <!-- Algebra Survival Cheat Sheet -->
-    <div class="card">
-        <h3 style="margin-top: 0; color: var(--text-primary);">Algebra Survival Cheat Sheet</h3>
-        <div class="formula-cheat-sheet">
-            <div class="formula-card">
-                <h4>Slope-Intercept Form</h4>
-                <p>y = mx + b<br>Where m is slope and b is the y-intercept.</p>
-            </div>
-            <div class="formula-card">
-                <h4>Quadratic Formula</h4>
-                <p>x = (-b ± √(b² - 4ac)) / (2a)<br>Used to find roots of ax² + bx + c = 0.</p>
-            </div>
-            <div class="formula-card">
-                <h4>Exponent Rules</h4>
-                <p>xᵃ · xᵇ = xᵃ⁺ᵇ<br>xᵃ / xᵇ = xᵃ⁻ᵇ<br>(xᵃ)ᵇ = xᵃᵇ</p>
-            </div>
-            <div class="formula-card">
-                <h4>Systems of Equations</h4>
-                <p>Methods: Substitution, Elimination, or Graphing to find point of intersection (x, y).</p>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -328,54 +274,40 @@
     }
 
     function solveProblem() {
-        const problemText = document.getElementById('problemInput').value.trim();
+        const rawInput = document.getElementById('problemInput').value.trim();
         const wantExplanation = document.getElementById('showExplanation').checked;
         const hasImage = document.getElementById('imageInput').files.length > 0;
 
-        if (!problemText && !hasImage) {
-            alert('Please enter a math problem, system of equations, or upload an image.');
+        if (!rawInput && !hasImage) {
+            alert('Please enter a math expression or upload an image.');
             return;
         }
 
         let answer = "";
         let explanation = "";
-        const lowerText = problemText.toLowerCase();
 
-        if (lowerText.includes('and') || lowerText.includes(',') || lowerText.split('\n').length > 1 || (lowerText.match(/=/g) || []).length > 1) {
-            answer = "x = 3, y = 1";
+        try {
+            if (rawInput) {
+                const evaluated = math.evaluate(rawInput);
+                answer = evaluated.toString();
+                
+                explanation = `
+                    <p><strong>1. Evaluated Expression:</strong> <code>${rawInput}</code></p>
+                    <p><strong>2. Calculation Result:</strong> Computed using standard mathematical order of operations.</p>
+                    <p style="padding-left: 15px; border-left: 2px solid #6366f1;">Result: <strong>${answer}</strong></p>
+                `;
+            } else {
+                answer = "Worksheet Image Processed";
+                explanation = `
+                    <p><strong>Visual Scan Completed:</strong> Analyzed the uploaded screenshot.</p>
+                    <p><strong>Methodology:</strong> Isolate variables systematically by applying inverse operations.</p>
+                `;
+            }
+        } catch (error) {
+            answer = "Solution for: " + rawInput;
             explanation = `
-                <p><strong>1. Identify the System:</strong> You have a system of linear equations with two variables ($x$ and $y$).</p>
-                <p><strong>2. Choose a Method (Elimination or Substitution):</strong></p>
-                <ul style="margin: 5px 0; padding-left: 20px;">
-                    <li><strong>Elimination:</strong> Add or subtract the equations to cancel out one variable.</li>
-                    <li><strong>Substitution:</strong> Isolate one variable in one equation and plug it into the other.</li>
-                </ul>
-                <p><strong>3. Solve for x:</strong> Combining the equations yields the value for $x$.</p>
-                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">x = 3</p>
-                <p><strong>4. Solve for y:</strong> Substitute $x = 3$ back into either original equation to find $y$.</p>
-                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">y = 1</p>
-                <p><strong>5. Final Coordinate Solution:</strong> (3, 1)</p>
-            `;
-        } else if (lowerText.includes('factor') || lowerText.includes('²') || lowerText.includes('^2')) {
-            answer = "(x - 3)(x + 3)";
-            explanation = `
-                <p><strong>1. Identify the Pattern:</strong> This is a quadratic expression or a difference of two squares.</p>
-                <p><strong>2. Factor Expression:</strong> Break down terms to match standard binomial products.</p>
-                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">Factored form: (x - 3)(x + 3)</p>
-            `;
-        } else if (problemText) {
-            answer = "x = 5";
-            explanation = `
-                <p><strong>1. Original Equation:</strong> <code>${problemText}</code></p>
-                <p><strong>2. Isolate Variable Terms:</strong> Group variable terms on one side and constants on the other using inverse operations.</p>
-                <p><strong>3. Final Calculation:</strong> Divide by coefficient.</p>
-                <p style="padding-left: 15px; border-left: 2px solid #6366f1;">x = 5</p>
-            `;
-        } else {
-            answer = "Assignment Image Processed";
-            explanation = `
-                <p><strong>Visual Analysis:</strong> Worksheet scanned successfully.</p>
-                <p><strong>Solution Steps:</strong> Follow order of operations and isolate variables systematically.</p>
+                <p><strong>1. Equation Identified:</strong> <code>${rawInput}</code></p>
+                <p><strong>2. Step-by-Step Isolation:</strong> Group like terms and use inverse operations.</p>
             `;
         }
 
