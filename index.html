@@ -524,17 +524,17 @@
             ? "Write out a deeply detailed, conversational, step-by-step walkthrough explaining every single action like a human buddy sitting next to them. Never rush or skip steps. CRITICAL: Output plain text paragraphs, dashes (-) for lists, and HTML tags like <p>, <strong>, <br> only. DO NOT use markdown headers like '#', '##', or '###' under any circumstances. Put the final answer inside a div with class 'final-answer-box' at the very bottom." 
             : "First, automatically clean up and rewrite the raw problem text. Then provide ONLY the clean final answer inside a div with class 'final-answer-box'. Do NOT include any explanations or steps.";
 
+        // By removing responseMimeType: "application/json" from generationConfig and asking plain text, 
+        // we completely eliminate JSON escaping errors (like bad backslashes in math LaTeX formulas).
         const systemInstruction = "You are an elite, patient mathematics and science tutor helping a student who gets easily overwhelmed.\n" +
             "CRITICAL INSTRUCTIONS:\n" +
             "- Analyze the user's input (it might contain jumbled lines, messy web text, or equations from a scanned worksheet).\n" +
             "- Automatically fix and un-jumble the text so each distinct problem is cleanly structured.\n" +
             "- For EVERY individual problem, create a separate cabinet folder.\n" +
-            "- Folder title format must strictly be: 'Problem 1', 'Problem 2', 'Problem 3', etc.\n" +
-            "- You MUST include the clean, auto-fixed original problem statement clearly at the top of each folder.\n" +
-            "- STRICT FORMATTING RULE: NEVER use hash symbols (#, ##, ###) anywhere in your response.\n" +
+            "- Format your response using clean HTML so it parses seamlessly without JSON errors.\n" +
+            "- Use structure like: <div class=\"cabinet-folder\"><div class=\"folder-tab\">Problem 1</div><div class=\"problem-badge\">📌 Cleaned Problem: [Problem Statement]</div><div class=\"folder-content\">[Explanation and final answer box]</div></div>\n" +
             "- Mode requested: " + instructionMode + "\n" +
-            "- Handle numbers, formulas, fractions, and units accurately using LaTeX inside dollar signs.\n" +
-            "- Respond strictly as a valid JSON object containing an array called 'folders', where each object in the array has three keys: 'title' (e.g. 'Problem 1'), 'problem' (the clean auto-fixed expression/question), and 'summary' (containing the conversational breakdown and the final answer box).";
+            "- Handle numbers, formulas, fractions, and units accurately using LaTeX inside dollar signs.";
 
         const userProblem = `Raw Un-formatted Input: ${problemText}`;
 
@@ -548,31 +548,31 @@
             });
         }
 
-        // Auto-retry engine: Loops automatically if high demand / rate limit hits
-        let maxRetries = 10;
+        // Infinite retry loop until success if high demand / rate limit hits
+        let attempt = 0;
         let delay = 2000;
         let response = null;
         let data = null;
 
-        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        while (true) {
+            attempt++;
             try {
                 response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         system_instruction: { parts: [{ text: systemInstruction }] },
-                        contents: [{ parts: contentsArray }],
-                        generationConfig: { responseMimeType: "application/json" }
+                        contents: [{ parts: contentsArray }]
                     })
                 });
 
                 data = await response.json();
 
-                // If overloaded or high demand (503 / 429), catch it and retry automatically
+                // If overloaded or rate limited, loop and keep retrying indefinitely
                 if (response.status === 503 || response.status === 429 || (data.error && data.error.code === 429)) {
-                    document.getElementById('cabinetFoldersContainer').innerHTML = `<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Server busy / high demand. Auto-retrying (Attempt ${attempt}/${maxRetries})... hanging tight for you, bro!</div></div>`;
+                    document.getElementById('cabinetFoldersContainer').innerHTML = `<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Server busy / high demand. Auto-retrying (Attempt ${attempt})... hanging tight for you, bro! We won't quit until you get your answer.</div></div>`;
                     await new Promise(resolve => setTimeout(resolve, delay));
-                    delay *= 1.5; // Exponential backoff
+                    delay = Math.min(delay * 1.5, 10000); // Backoff capped at 10s
                     continue;
                 }
 
@@ -580,61 +580,27 @@
                     throw new Error(data.error.message);
                 }
 
-                break; // Success! Exit retry loop
+                break; // Success! Exit loop
             } catch (err) {
-                if (attempt === maxRetries) {
-                    document.getElementById('cabinetFoldersContainer').innerHTML = `
-                        <div class="cabinet-folder" style="border-color: #ef4444;">
-                            <div class="folder-tab" style="background-color: #ef4444;">Error</div>
-                            <div class="folder-content">Details: ${err.message}</div>
-                        </div>`;
-                    return;
-                }
+                document.getElementById('cabinetFoldersContainer').innerHTML = `<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Connection glitch (${err.message}). Retrying (Attempt ${attempt})...</div></div>`;
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
 
         try {
-            let rawJsonText = data.candidates[0].content.parts[0].text;
+            let htmlOutput = data.candidates[0].content.parts[0].text;
             
-            // Clean markdown code blocks if present
-            rawJsonText = rawJsonText.replace(/```json/g, '').replace(/```/g, '').trim();
-            
-            const parsedResult = JSON.parse(rawJsonText);
+            // Strip markdown code fences if model wrapped HTML in them
+            htmlOutput = htmlOutput.replace(/```html/g, '').replace(/```/g, '').trim();
 
-            let foldersHTML = "";
-            if (parsedResult.folders && Array.isArray(parsedResult.folders)) {
-                parsedResult.folders.forEach((folder, index) => {
-                    const probTitle = folder.title || 'Problem ' + (index + 1);
-                    const origProblem = folder.problem || 'Expression not provided';
-                    let folderSummary = folder.summary || '';
-
-                    folderSummary = folderSummary
-                        .replace(/###\s*(.*)/g, '<strong>$1</strong>')
-                        .replace(/##\s*(.*)/g, '<strong>$1</strong>')
-                        .replace(/#\s*(.*)/g, '<strong>$1</strong>')
-                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-                    foldersHTML += `
-                        <div class="cabinet-folder">
-                            <div class="folder-tab">${probTitle}</div>
-                            <div class="problem-badge">📌 Cleaned Problem: ${origProblem}</div>
-                            <div class="folder-content">${folderSummary}</div>
-                        </div>
-                    `;
-                });
-            } else {
-                foldersHTML = `<div class="cabinet-folder"><div class='folder-tab'>Result</div><div class='folder-content'>${JSON.stringify(parsedResult)}</div></div>`;
-            }
-
-            document.getElementById('cabinetFoldersContainer').innerHTML = foldersHTML;
+            document.getElementById('cabinetFoldersContainer').innerHTML = htmlOutput;
             setTimeout(renderMathOnScreen, 50);
 
         } catch (err) {
             document.getElementById('cabinetFoldersContainer').innerHTML = `
                 <div class="cabinet-folder" style="border-color: #ef4444;">
-                    <div class="folder-tab" style="background-color: #ef4444;">JSON Parse Error</div>
-                    <div class="folder-content">Details: ${err.message}<br><br>Raw text returned from AI was invalid JSON. Hit button again to retry!</div>
+                    <div class="folder-tab" style="background-color: #ef4444;">Render Error</div>
+                    <div class="folder-content">Details: ${err.message}<br><br>Hit button again to retry!</div>
                 </div>`;
         }
     }
