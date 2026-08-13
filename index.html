@@ -330,6 +330,33 @@
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
 
+        /* Progress Bar Styles */
+        .progress-wrapper {
+            margin-top: 15px;
+            background-color: #1f2937;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            padding: 3px;
+        }
+
+        .progress-bar {
+            height: 12px;
+            width: 0%;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            border-radius: 6px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-status-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
         .action-row {
             display: flex;
             flex-wrap: wrap;
@@ -516,7 +543,22 @@
             return;
         }
 
-        document.getElementById('cabinetFoldersContainer').innerHTML = "<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Opening filing cabinet... auto-fixing formatting and organizing into crystal-clear folders...</div></div>";
+        // Initialize Cabinet with status and percentage bar
+        document.getElementById('cabinetFoldersContainer').innerHTML = `
+            <div class='cabinet-folder'>
+                <div class='folder-tab'>Status & Progress</div>
+                <div class='folder-content'>
+                    Opening filing cabinet... analyzing structure and preparing solution folders...
+                    <div class="progress-wrapper">
+                        <div class="progress-bar" id="progressBar" style="width: 10%;"></div>
+                    </div>
+                    <div class="progress-status-text">
+                        <span id="progressMessage">Connecting to AI Vault...</span>
+                        <span id="progressPercent">10%</span>
+                    </div>
+                </div>
+            </div>`;
+        
         document.getElementById('outputSection').style.display = 'block';
         document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
 
@@ -524,15 +566,13 @@
             ? "Write out a deeply detailed, conversational, step-by-step walkthrough explaining every single action like a human buddy sitting next to them. Never rush or skip steps. CRITICAL: Output plain text paragraphs, dashes (-) for lists, and HTML tags like <p>, <strong>, <br> only. DO NOT use markdown headers like '#', '##', or '###' under any circumstances. Put the final answer inside a div with class 'final-answer-box' at the very bottom." 
             : "First, automatically clean up and rewrite the raw problem text. Then provide ONLY the clean final answer inside a div with class 'final-answer-box'. Do NOT include any explanations or steps.";
 
-        // By removing responseMimeType: "application/json" from generationConfig and asking plain text, 
-        // we completely eliminate JSON escaping errors (like bad backslashes in math LaTeX formulas).
         const systemInstruction = "You are an elite, patient mathematics and science tutor helping a student who gets easily overwhelmed.\n" +
             "CRITICAL INSTRUCTIONS:\n" +
             "- Analyze the user's input (it might contain jumbled lines, messy web text, or equations from a scanned worksheet).\n" +
             "- Automatically fix and un-jumble the text so each distinct problem is cleanly structured.\n" +
             "- For EVERY individual problem, create a separate cabinet folder.\n" +
             "- Format your response using clean HTML so it parses seamlessly without JSON errors.\n" +
-            "- Use structure like: <div class=\"cabinet-folder\"><div class=\"folder-tab\">Problem 1</div><div class=\"problem-badge\">📌 Cleaned Problem: [Problem Statement]</div><div class=\"folder-content\">[Explanation and final answer box]</div></div>\n" +
+            "- Use structure like: <div class=\"cabinet-folder\"><div class=\"folder-tab\">Problem 1</div><div class=\"problem-badge\">📌 Cleaned Problem: [Problem Statement]</div><div class=\"folder-content\">[Explanation / Answer box]</div></div>\n" +
             "- Mode requested: " + instructionMode + "\n" +
             "- Handle numbers, formulas, fractions, and units accurately using LaTeX inside dollar signs.";
 
@@ -548,7 +588,20 @@
             });
         }
 
-        // Infinite retry loop until success if high demand / rate limit hits
+        // Update progress helper
+        function updateProgress(percent, msg) {
+            const bar = document.getElementById('progressBar');
+            const txtMsg = document.getElementById('progressMessage');
+            const txtPct = document.getElementById('progressPercent');
+            if (bar && txtMsg && txtPct) {
+                bar.style.width = percent + '%';
+                txtPct.innerText = percent + '%';
+                txtMsg.innerText = msg;
+            }
+        }
+
+        updateProgress(25, "Transmitting problem payload securely...");
+
         let attempt = 0;
         let delay = 2000;
         let response = null;
@@ -557,6 +610,8 @@
         while (true) {
             attempt++;
             try {
+                updateProgress(Math.min(30 + (attempt * 15), 85), `Contacting server (Attempt ${attempt})...`);
+
                 response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -568,11 +623,10 @@
 
                 data = await response.json();
 
-                // If overloaded or rate limited, loop and keep retrying indefinitely
                 if (response.status === 503 || response.status === 429 || (data.error && data.error.code === 429)) {
-                    document.getElementById('cabinetFoldersContainer').innerHTML = `<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Server busy / high demand. Auto-retrying (Attempt ${attempt})... hanging tight for you, bro! We won't quit until you get your answer.</div></div>`;
+                    updateProgress(40, `High demand detected! Auto-retrying (Attempt ${attempt})... hanging tight for you, bro!`);
                     await new Promise(resolve => setTimeout(resolve, delay));
-                    delay = Math.min(delay * 1.5, 10000); // Backoff capped at 10s
+                    delay = Math.min(delay * 1.5, 10000);
                     continue;
                 }
 
@@ -580,19 +634,19 @@
                     throw new Error(data.error.message);
                 }
 
-                break; // Success! Exit loop
+                updateProgress(90, "Received response. Formatting & rendering folders...");
+                break;
             } catch (err) {
-                document.getElementById('cabinetFoldersContainer').innerHTML = `<div class='cabinet-folder'><div class='folder-tab'>Status</div><div class='folder-content'>Connection glitch (${err.message}). Retrying (Attempt ${attempt})...</div></div>`;
+                updateProgress(50, `Connection glitch (${err.message}). Retrying (Attempt ${attempt})...`);
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
 
         try {
             let htmlOutput = data.candidates[0].content.parts[0].text;
-            
-            // Strip markdown code fences if model wrapped HTML in them
             htmlOutput = htmlOutput.replace(/```html/g, '').replace(/```/g, '').trim();
 
+            updateProgress(100, "Done! Opening folders...");
             document.getElementById('cabinetFoldersContainer').innerHTML = htmlOutput;
             setTimeout(renderMathOnScreen, 50);
 
