@@ -242,17 +242,16 @@
             display: none;
             background: #ffffff !important;
             color: #0f172a !important;
-            border: 2px solid #cbd5e1 !important;
+            border: 1px solid #cbd5e1 !important;
+            padding: 30px;
         }
 
         .print-header-block {
             display: none;
             border-bottom: 2px solid #0f172a;
             padding-bottom: 12px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             background: #ffffff;
-            padding: 12px;
-            border-radius: 6px;
         }
 
         .print-header-grid {
@@ -263,60 +262,53 @@
             color: #0f172a;
         }
 
-        .cabinet-folder {
-            background: #ffffff !important;
-            border: 1px solid #cbd5e1 !important;
-            border-left: 5px solid #2563eb !important;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 14px;
-            position: relative;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .folder-tab {
-            display: inline-block;
-            background: #f1f5f9;
-            color: #1e293b;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            border: 1px solid #cbd5e1;
-        }
-
-        .folder-content {
-            font-size: 0.95rem;
+        /* Seamless Unified Study Guide Flow (No choppy boxes/tabs) */
+        .study-guide-document {
+            font-size: 1rem;
             line-height: 1.6;
             color: #0f172a !important;
         }
 
+        .study-guide-document h3 {
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-size: 1.15rem;
+            color: #1e293b;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 6px;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .study-guide-document p, .study-guide-document div {
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
         .sticky-note-box {
-            margin-top: 10px;
+            margin-top: 15px;
             background: #fef08a;
             color: #713f12;
-            padding: 8px 10px;
+            padding: 10px 14px;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
             border: 1px solid #facc15;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .scratchpad-area {
             display: none;
             border: 2px dashed #94a3b8;
             border-radius: 10px;
-            padding: 12px;
-            margin-top: 15px;
+            padding: 15px;
+            margin-top: 20px;
             background: #ffffff;
             color: #000000;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .divider-page {
@@ -344,8 +336,8 @@
             border-radius: 10px;
             background: #ffffff;
             color: #065f46;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .formula-flyout-btn {
@@ -380,7 +372,7 @@
         }
         .formula-sidebar.open { left: 0; }
 
-        /* REFINED INK-SAVING TEACHER-GRADE PRINT ENGINE */
+        /* UNIFIED CLEAN PRINT ENGINE (Perfect for binder clips, zero border boxes) */
         @media print {
             @page {
                 size: letter;
@@ -417,7 +409,6 @@
                 margin-bottom: 15px !important;
                 padding-bottom: 8px !important;
                 page-break-inside: avoid !important;
-                break-inside: avoid !important;
             }
             
             body.print-scratchpad-on .scratchpad-area { display: block !important; }
@@ -425,36 +416,14 @@
             body.print-quickcut-on .quick-cut-sheet { display: block !important; }
             body.print-quickcut-off .quick-cut-sheet { display: none !important; }
             
-            .cabinet-folder { 
-                padding: 12px 14px !important; 
-                background: #ffffff !important; 
-                border: 1px solid #94a3b8 !important; 
-                border-left: 4px solid #1e293b !important; 
-                color: black !important; 
-                box-shadow: none !important; 
-                page-break-inside: avoid !important; 
-                break-inside: avoid !important;
-                margin-bottom: 12px !important;
-            }
-            
-            .cabinet-folder p, .cabinet-folder div, .cabinet-folder ul, .cabinet-folder ol, .folder-content {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
+            .study-guide-document {
+                font-size: 10pt !important;
+                line-height: 1.45 !important;
                 color: black !important;
             }
-
-            .folder-tab { 
-                background: #f1f5f9 !important; 
-                color: #000000 !important; 
-                border: 1px solid #cbd5e1 !important;
-                padding: 2px 8px !important; 
-                font-size: 0.75rem !important; 
-                font-weight: bold; 
-            }
-            .folder-content { 
-                font-size: 9.5pt !important; 
-                line-height: 1.4 !important; 
-                color: black !important; 
+            .study-guide-document h3 {
+                border-bottom: 1px solid #000 !important;
+                color: black !important;
             }
             .katex, .katex-display { color: black !important; }
         }
@@ -481,7 +450,7 @@
         <h1>MathGen Elite Engine</h1>
         <p>Algebra 2 Study Suite & Print Vault</p>
         <div class="dashboard-badge-row">
-            <span class="dash-chip">✨ 5th-Grade Simple Explanations</span>
+            <span class="dash-chip">✨ Crystal-Clear Explanations</span>
             <span class="dash-chip">🎯 Perfect PDF Fraction Rendering</span>
             <span class="dash-chip">⚡ Powered by Gemini 3.6 Flash</span>
         </div>
@@ -571,7 +540,7 @@
             </div>
         </div>
 
-        <div id="cabinetFoldersContainer"></div>
+        <div class="study-guide-document" id="studyGuideContent"></div>
 
         <div class="quick-cut-sheet" id="quickCutSheet">
             <h3 style="margin-top:0; color:#065f46;">Quick-Cut Algebra 2 Formula Cards</h3>
@@ -673,27 +642,23 @@
 
     function applyDensityMode() {
         const mode = document.getElementById('printDensity').value;
-        const folders = document.querySelectorAll('.cabinet-folder');
-        folders.forEach(f => {
-            if (mode === 'compact') {
-                f.style.padding = '10px 14px';
-                f.style.marginBottom = '10px';
-                f.style.fontSize = '0.85rem';
-            } else if (mode === 'large') {
-                f.style.padding = '20px';
-                f.style.fontSize = '1.05rem';
-            } else {
-                f.style.padding = '14px';
-                f.style.fontSize = '0.9rem';
-            }
-        });
+        const doc = document.getElementById('studyGuideContent');
+        if (mode === 'compact') {
+            doc.style.fontSize = '0.88rem';
+            doc.style.lineHeight = '1.45';
+        } else if (mode === 'large') {
+            doc.style.fontSize = '1.1rem';
+            doc.style.lineHeight = '1.7';
+        } else {
+            doc.style.fontSize = '1rem';
+            doc.style.lineHeight = '1.6';
+        }
     }
 
     let quizModeActive = false;
     function toggleQuizMode() {
         quizModeActive = !quizModeActive;
         const btn = document.getElementById('quizModeBtn');
-        const folders = document.querySelectorAll('.cabinet-folder');
         if (quizModeActive) {
             btn.innerText = "Quiz Mode: ON";
             btn.style.background = "#059669";
@@ -719,9 +684,8 @@
     function insertStickyNotePrompt() {
         const noteText = prompt("Enter your personal sticky note / reminder for this session:");
         if (noteText) {
-            const folders = document.querySelectorAll('.cabinet-folder');
-            if (folders.length > 0) {
-                const target = folders[0];
+            const target = document.getElementById('studyGuideContent');
+            if (target) {
                 let noteBox = target.querySelector('.sticky-note-box');
                 if (!noteBox) {
                     noteBox = document.createElement('div');
@@ -734,17 +698,13 @@
     }
 
     function exportAnkiCSV() {
-        const folders = document.querySelectorAll('.cabinet-folder');
-        if (folders.length === 0) {
+        const target = document.getElementById('studyGuideContent');
+        if (!target || target.innerHTML.trim() === "") {
             alert("No problems generated yet to export!");
             return;
         }
         let csvContent = "data:text/csv;charset=utf-8,Front,Back\n";
-        folders.forEach(f => {
-            const prob = f.querySelector('.folder-tab')?.innerText.replace(/"/g, '""') || "";
-            const ans = f.querySelector('.folder-content')?.innerText.replace(/"/g, '""') || "";
-            csvContent += `"${prob}","${ans}"\n`;
-        });
+        csvContent += `"Algebra 2 Problem Set","${target.innerText.replace(/"/g, '""').substring(0, 100)}..."\n`;
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
@@ -786,9 +746,9 @@
         document.getElementById('lblClassName').innerText = "Algebra 2";
 
         const systemPrompt = `You are an expert Algebra 2 tutor and master study suite generator. 
-Solve the provided math problems clearly with 5th-grade friendly logic, step-by-step guidance, pitfall warnings, and verified final answers. 
+Solve the provided math problems clearly, naturally, and directly. Provide the full problem statement, clear step-by-step working logic without any meta-talk or referencing any internal system instructions or grade levels, and the verified final answer. 
 CRITICAL MATH FORMATTING RULE: Whenever you write fractions, you MUST use LaTeX display or inline fraction notation using \\dfrac{numerator}{denominator} or \\frac{numerator}{denominator} so they stack properly like a clean printed PDF textbook rather than messy inline text slashes. 
-Format your output as clean HTML structure inside individual cabinet folder blocks so each problem has its own independent card layout.`;
+Format your output as clean, unified HTML text flow with clean headings and step breakdowns suitable for a continuous printed master study guide.`;
 
         const contents = [];
         if (problemText) {
@@ -858,17 +818,10 @@ Format your output as clean HTML structure inside individual cabinet folder bloc
         document.getElementById('binderDividerPage').style.display = 'flex';
         document.getElementById('outputSection').style.display = 'block';
 
-        const foldersContainer = document.getElementById('cabinetFoldersContainer');
+        const studyGuideContainer = document.getElementById('studyGuideContent');
         let cleanedOutput = outputText.replace(/```html/g, '').replace(/```/g, '');
 
-        foldersContainer.innerHTML = `
-            <div class="cabinet-folder">
-                <div class="folder-tab">Solution Output</div>
-                <div class="folder-content">
-                    ${cleanedOutput}
-                </div>
-            </div>
-        `;
+        studyGuideContainer.innerHTML = cleanedOutput;
 
         if (featureStates.scratchpad) {
             document.body.classList.add('print-scratchpad-on');
