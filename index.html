@@ -244,19 +244,19 @@
 
         .print-header-block {
             display: none;
-            border-bottom: 3px solid #1e293b;
-            padding-bottom: 16px;
-            margin-bottom: 20px;
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
             background: #ffffff;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 6px;
         }
 
         .print-header-grid {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
             gap: 15px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #0f172a;
         }
 
@@ -300,6 +300,8 @@
             font-size: 0.8rem;
             font-weight: 600;
             border: 1px solid #facc15;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
         }
 
         .scratchpad-area {
@@ -310,13 +312,13 @@
             margin-top: 15px;
             background: #ffffff;
             color: #000000;
-            page-break-inside: avoid;
-            break-inside: avoid;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
         }
 
         .divider-page {
             display: none;
-            page-break-before: always;
+            page-break-after: always;
             height: 92vh;
             border: 8px double #1e3a8a;
             border-radius: 16px;
@@ -347,8 +349,8 @@
             border-radius: 10px;
             background: #f0fdf4;
             color: #065f46;
-            page-break-inside: avoid;
-            break-inside: avoid;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
         }
 
         .formula-flyout-btn {
@@ -390,34 +392,92 @@
             box-shadow: none !important;
         }
 
+        /* STRICT ANTI-BREAK PRINT ENGINE FIX */
         @media print {
-            body { background: white !important; color: black !important; padding: 0 !important; }
-            .container { max-width: 100% !important; }
-            header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header, .formula-flyout-btn { display: none !important; }
-            .output-section { display: block !important; border: none !important; box-shadow: none !important; background: white !important; }
-            .print-header-block { display: block !important; border: 2px solid #0f172a !important; background: #ffffff !important; }
+            @page {
+                size: letter;
+                margin: 0.6in;
+            }
+            body { 
+                background: white !important; 
+                color: black !important; 
+                padding: 0 !important; 
+                font-size: 10pt !important;
+            }
+            .container { 
+                max-width: 100% !important; 
+                width: 100% !important; 
+                padding: 0 !important; 
+                margin: 0 !important; 
+            }
+            header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header, .formula-flyout-btn { 
+                display: none !important; 
+            }
+            .output-section { 
+                display: block !important; 
+                border: none !important; 
+                box-shadow: none !important; 
+                background: white !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+            }
+            .print-header-block { 
+                display: block !important; 
+                border: 2px solid #0f172a !important; 
+                background: #ffffff !important; 
+                margin-bottom: 15px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
             
             body.print-scratchpad-on .scratchpad-area { display: block !important; }
             body.print-scratchpad-off .scratchpad-area { display: none !important; }
             body.print-quickcut-on .quick-cut-sheet { display: block !important; }
             body.print-quickcut-off .quick-cut-sheet { display: none !important; }
             
-            .divider-page { display: flex !important; }
+            .divider-page { 
+                display: flex !important; 
+                height: 100vh !important; 
+                page-break-after: always !important; 
+                break-after: page !important;
+            }
             
             .cabinet-folder { 
-                padding: 12px 14px 12px 32px !important; 
+                padding: 12px 16px !important; 
                 background: #ffffff !important; 
-                border: 2px solid #0f172a !important; 
-                border-left: 6px solid #2563eb !important; 
+                border: 1px solid #334155 !important; 
+                border-left: 5px solid #2563eb !important; 
                 color: black !important; 
                 box-shadow: none !important; 
                 page-break-inside: avoid !important; 
                 break-inside: avoid !important;
                 margin-bottom: 12px !important;
             }
-            .folder-tab { background: #2563eb !important; color: white !important; padding: 3px 10px !important; font-size: 0.8rem !important; font-weight: bold; }
-            .folder-content { font-size: 0.9rem !important; line-height: 1.4 !important; color: #1e293b !important; }
+            
+            /* Prevent orphan line splitting inside notes and folders */
+            .cabinet-folder p, .cabinet-folder div, .cabinet-folder ul, .cabinet-folder ol, .folder-content {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .folder-tab { 
+                background: #2563eb !important; 
+                color: white !important; 
+                padding: 3px 10px !important; 
+                font-size: 0.75rem !important; 
+                font-weight: bold; 
+            }
+            .folder-content { 
+                font-size: 9.5pt !important; 
+                line-height: 1.4 !important; 
+                color: #0f172a !important; 
+            }
             .katex { color: black !important; }
+            
+            .quick-cut-sheet, .scratchpad-area {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
         }
     </style>
 </head>
@@ -473,9 +533,9 @@
             <div>
                 <label for="printDensity">Print Layout Density</label>
                 <select id="printDensity" onchange="applyDensityMode()">
-                    <option value="compact">Compact (Optimized for 90% Scale)</option>
+                    <option value="compact" selected>Compact (Optimized to Prevent Breaks)</option>
                     <option value="standard">Standard Print Mode</option>
-                    <option value="large" selected>Large Print (High Legibility)</option>
+                    <option value="large">Large Print (High Legibility)</option>
                 </select>
             </div>
         </div>
@@ -528,7 +588,7 @@
         </div>
 
         <div class="print-header-block" id="printHeaderBlock">
-            <div style="font-size: 1.4rem; font-weight: 900; color: #0f172a; margin-bottom: 8px;" id="lblAssignmentTitle"></div>
+            <div style="font-size: 1.3rem; font-weight: 900; color: #0f172a; margin-bottom: 6px;" id="lblAssignmentTitle"></div>
             <div class="print-header-grid">
                 <div><strong>Name:</strong> <span id="lblStudentName"></span></div>
                 <div><strong>Class:</strong> <span id="lblClassName"></span></div>
@@ -551,7 +611,7 @@
 
         <div class="scratchpad-area" id="scratchpadArea">
             <h4 style="margin:0 0 10px 0; color:#475569; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em;">Scratchpad & Manual Working Space</h4>
-            <div style="height: 120px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;"></div>
+            <div style="height: 100px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;"></div>
         </div>
 
         <div class="action-row" style="margin-top:25px; display:flex; flex-wrap:wrap; gap:10px;">
@@ -653,11 +713,11 @@
         const folders = document.querySelectorAll('.cabinet-folder');
         folders.forEach(f => {
             if (mode === 'compact') {
-                f.style.padding = '10px 12px';
+                f.style.padding = '10px 14px';
                 f.style.marginBottom = '10px';
                 f.style.fontSize = '0.85rem';
             } else if (mode === 'large') {
-                f.style.padding = '22px';
+                f.style.padding = '20px';
                 f.style.fontSize = '1.05rem';
             } else {
                 f.style.padding = '14px';
@@ -761,7 +821,7 @@
 
         const systemPrompt = `You are an expert Algebra 2 tutor and master study suite generator. 
 Solve the provided math problems clearly with 5th-grade friendly logic, step-by-step guidance, pitfall warnings, and verified final answers formatted using LaTeX ($...$ and $$...$$). 
-Format your output as clean HTML structure inside a cabinet folder layout so it displays neatly.`;
+Format your output as clean HTML structure inside individual cabinet folder blocks so each problem has its own independent card layout.`;
 
         const contents = [];
         if (problemText) {
