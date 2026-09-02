@@ -265,12 +265,11 @@
 
         .cabinet-folder {
             background: #ffffff !important;
-            border: 1px solid #94a3b8 !important;
-            border-left: 6px solid #2563eb !important;
-            border-radius: 10px;
+            border: 1px solid #cbd5e1 !important;
+            border-left: 5px solid #2563eb !important;
+            border-radius: 8px;
             padding: 16px;
             margin-bottom: 14px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             position: relative;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
@@ -278,14 +277,15 @@
 
         .folder-tab {
             display: inline-block;
-            background: #2563eb;
-            color: white;
+            background: #f1f5f9;
+            color: #1e293b;
             font-weight: 700;
             padding: 4px 10px;
-            border-radius: 4px 4px 0 0;
+            border-radius: 4px;
             font-size: 0.8rem;
             text-transform: uppercase;
             margin-bottom: 8px;
+            border: 1px solid #cbd5e1;
         }
 
         .folder-content {
@@ -323,25 +323,17 @@
             display: none;
             page-break-after: always;
             height: 92vh;
-            border: 8px double #1e3a8a;
-            border-radius: 16px;
-            padding: 50px;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 40px;
             text-align: center;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+            background: #ffffff;
             color: #0f172a;
             box-sizing: border-box;
             position: relative;
-            overflow: hidden;
-        }
-
-        .divider-page::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 12px;
-            background: linear-gradient(90deg, #3b82f6, #f59e0b, #10b981, #6366f1);
         }
 
         .quick-cut-sheet {
@@ -350,7 +342,7 @@
             border: 2px dashed #059669;
             padding: 15px;
             border-radius: 10px;
-            background: #f0fdf4;
+            background: #ffffff;
             color: #065f46;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
@@ -388,11 +380,11 @@
         }
         .formula-sidebar.open { left: 0; }
 
-        /* STRICT PDF-LIKE PRINT & SCREEN CONTRAST ENGINE */
+        /* REFINED INK-SAVING TEACHER-GRADE PRINT ENGINE */
         @media print {
             @page {
                 size: letter;
-                margin: 0.6in;
+                margin: 0.5in;
             }
             body { 
                 background: white !important; 
@@ -406,7 +398,7 @@
                 padding: 0 !important; 
                 margin: 0 !important; 
             }
-            header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header, .formula-flyout-btn { 
+            header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header, .formula-flyout-btn, .divider-page { 
                 display: none !important; 
             }
             .output-section { 
@@ -420,9 +412,10 @@
             }
             .print-header-block { 
                 display: block !important; 
-                border: 2px solid #0f172a !important; 
+                border-bottom: 2px solid #000000 !important; 
                 background: #ffffff !important; 
                 margin-bottom: 15px !important;
+                padding-bottom: 8px !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
@@ -432,18 +425,11 @@
             body.print-quickcut-on .quick-cut-sheet { display: block !important; }
             body.print-quickcut-off .quick-cut-sheet { display: none !important; }
             
-            .divider-page { 
-                display: flex !important; 
-                height: 100vh !important; 
-                page-break-after: always !important; 
-                break-after: page !important;
-            }
-            
             .cabinet-folder { 
-                padding: 12px 16px !important; 
+                padding: 12px 14px !important; 
                 background: #ffffff !important; 
-                border: 1px solid #334155 !important; 
-                border-left: 5px solid #2563eb !important; 
+                border: 1px solid #94a3b8 !important; 
+                border-left: 4px solid #1e293b !important; 
                 color: black !important; 
                 box-shadow: none !important; 
                 page-break-inside: avoid !important; 
@@ -458,9 +444,10 @@
             }
 
             .folder-tab { 
-                background: #2563eb !important; 
-                color: white !important; 
-                padding: 3px 10px !important; 
+                background: #f1f5f9 !important; 
+                color: #000000 !important; 
+                border: 1px solid #cbd5e1 !important;
+                padding: 2px 8px !important; 
                 font-size: 0.75rem !important; 
                 font-weight: bold; 
             }
@@ -470,11 +457,6 @@
                 color: black !important; 
             }
             .katex, .katex-display { color: black !important; }
-            
-            .quick-cut-sheet, .scratchpad-area {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
         }
     </style>
 </head>
@@ -566,26 +548,22 @@
     </div>
 
     <div class="divider-page" id="binderDividerPage">
-        <div style="background: rgba(30, 58, 138, 0.1); border: 2px solid #1e3a8a; padding: 12px 25px; border-radius: 30px; margin-bottom: 25px;">
-            <span style="font-size: 1.1rem; font-weight: 800; color: #1e3a8a; letter-spacing: 0.1em;" id="coverClassName">ALGEBRA 2 STUDY SUITE</span>
-        </div>
-        <h1 style="font-size: 3.5rem; margin:0 0 15px 0; color:#0f172a; letter-spacing: -0.03em;" id="coverAssignmentTitle">Problem Set</h1>
-        <p style="font-size: 1.3rem; color:#475569; max-width: 600px; margin: 0 auto 30px auto;" id="coverSubtitleText">Crystal Clear Solutions & Step-by-Step Logic Vault</p>
-        <div style="display: flex; gap: 20px; font-weight: 600; color: #334155; font-size: 1.05rem;">
-            <span>Student: <strong id="coverStudentName">Mark</strong></span>
-            <span>•</span>
+        <h1 style="font-size: 3rem; margin:0 0 15px 0; color:#0f172a;" id="coverAssignmentTitle">Problem Set</h1>
+        <p style="font-size: 1.2rem; color:#475569; margin: 0 auto 30px auto;" id="coverSubtitleText">Crystal Clear Solutions & Step-by-Step Logic Vault</p>
+        <div style="font-weight: 600; color: #334155; font-size: 1rem;">
+            <span>Student: <strong id="coverStudentName">Mark</strong></span> | 
             <span>Date: <strong id="coverDate"></strong></span>
         </div>
     </div>
 
     <div class="card output-section" id="outputSection">
-        <div class="cabinet-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid var(--cabinet-gold); padding-bottom:10px; margin-bottom:20px;">
-            <h2 style="margin:0; color:#b45309;">Master Answer Cabinet</h2>
+        <div class="cabinet-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:20px;">
+            <h2 style="margin:0; color:#0f172a;">Master Answer Cabinet</h2>
             <button class="btn-secondary" style="margin:0; background:#4b5563;" onclick="toggleFocusMode()" id="focusToggleBtn">Focus Mode</button>
         </div>
 
         <div class="print-header-block" id="printHeaderBlock">
-            <div style="font-size: 1.3rem; font-weight: 900; color: #0f172a; margin-bottom: 6px;" id="lblAssignmentTitle"></div>
+            <div style="font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 4px;" id="lblAssignmentTitle"></div>
             <div class="print-header-grid">
                 <div><strong>Name:</strong> <span id="lblStudentName"></span></div>
                 <div><strong>Class:</strong> <span id="lblClassName"></span></div>
@@ -597,22 +575,19 @@
 
         <div class="quick-cut-sheet" id="quickCutSheet">
             <h3 style="margin-top:0; color:#065f46;">Quick-Cut Algebra 2 Formula Cards</h3>
-            <p style="font-size:0.9rem; margin-bottom:15px;">Cut along dashed lines to keep these key formulas in your pocket.</p>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
-                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Quadratic Formula:</strong><br>$\dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a}$</div>
-                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Vertex Form:</strong><br>$f(x) = a(x - h)^2 + k$</div>
-                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Slope-Intercept:</strong><br>$y = mx + b$</div>
-                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Log Product Rule:</strong><br>$\log_b(xy) = \log_b x + \log_b y$</div>
+                <div style="border:1px dashed #059669; padding:12px; border-radius:6px;"><strong>Quadratic Formula:</strong><br>$\dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a}$</div>
+                <div style="border:1px dashed #059669; padding:12px; border-radius:6px;"><strong>Vertex Form:</strong><br>$f(x) = a(x - h)^2 + k$</div>
             </div>
         </div>
 
         <div class="scratchpad-area" id="scratchpadArea">
-            <h4 style="margin:0 0 10px 0; color:#475569; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em;">Scratchpad & Manual Working Space</h4>
-            <div style="height: 100px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;"></div>
+            <h4 style="margin:0 0 10px 0; color:#475569; text-transform:uppercase; font-size:0.85rem;">Scratchpad & Manual Working Space</h4>
+            <div style="height: 100px; border: 1px solid #cbd5e1; border-radius: 6px;"></div>
         </div>
 
         <div class="action-row" style="margin-top:25px; display:flex; flex-wrap:wrap; gap:10px;">
-            <button class="btn-secondary" style="background: #2563eb;" onclick="window.print()">Print Study Guide</button>
+            <button class="btn-secondary" style="background: #2563eb;" onclick="triggerPrint()">Print Study Guide</button>
             <button class="btn-secondary" style="background: #059669;" onclick="exportAnkiCSV()">Export Anki CSV</button>
             <button class="btn-secondary" style="background: #7c3aed;" onclick="insertStickyNotePrompt()">Add Sticky Note</button>
             <button class="btn-secondary" style="background: #d97706;" onclick="toggleQuizMode()" id="quizModeBtn">Quiz Mode: OFF</button>
@@ -647,19 +622,10 @@
     function toggleFeature(featureName) {
         featureStates[featureName] = !featureStates[featureName];
         const btn = document.getElementById('btn' + featureName.charAt(0).toUpperCase() + featureName.slice(1));
-        
         if (featureStates[featureName]) {
             btn.classList.add('active');
         } else {
             btn.classList.remove('active');
-        }
-
-        if (featureName === 'ecoInk') {
-            if (featureStates.ecoInk) {
-                document.body.classList.add('eco-ink-mode');
-            } else {
-                document.body.classList.remove('eco-ink-mode');
-            }
         }
     }
 
@@ -731,15 +697,9 @@
         if (quizModeActive) {
             btn.innerText = "Quiz Mode: ON";
             btn.style.background = "#059669";
-            folders.forEach(f => {
-                f.classList.add('quiz-hidden');
-                const box = f.querySelector('.final-answer-box');
-                if (box) box.onclick = () => f.classList.remove('quiz-hidden');
-            });
         } else {
             btn.innerText = "Quiz Mode: OFF";
             btn.style.background = "#d97706";
-            folders.forEach(f => f.classList.remove('quiz-hidden'));
         }
     }
 
@@ -781,8 +741,8 @@
         }
         let csvContent = "data:text/csv;charset=utf-8,Front,Back\n";
         folders.forEach(f => {
-            const prob = f.querySelector('.problem-badge')?.innerText.replace(/"/g, '""') || "";
-            const ans = f.querySelector('.final-answer-box')?.innerText.replace(/"/g, '""') || "";
+            const prob = f.querySelector('.folder-tab')?.innerText.replace(/"/g, '""') || "";
+            const ans = f.querySelector('.folder-content')?.innerText.replace(/"/g, '""') || "";
             csvContent += `"${prob}","${ans}"\n`;
         });
         const encodedUri = encodeURI(csvContent);
@@ -792,6 +752,15 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+
+    function triggerPrint() {
+        const outputSection = document.getElementById('outputSection');
+        if (outputSection.style.display === 'none' || outputSection.style.display === '') {
+            alert("Please generate the answer cabinet first before printing.");
+            return;
+        }
+        window.print();
     }
 
     async function solveProblemAI() {
@@ -858,7 +827,6 @@ Format your output as clean HTML structure inside individual cabinet folder bloc
 
                 if (response.status === 429 || response.status === 503 || (data.error && (data.error.code === 429 || data.error.status === "RESOURCE_EXHAUSTED"))) {
                     if (attempt < maxRetries) {
-                        console.warn(`Server busy (Attempt ${attempt}/${maxRetries}). Retrying in ${delay / 1000}s...`);
                         await new Promise(resolve => setTimeout(resolve, delay));
                         delay *= 2; 
                         continue;
@@ -882,7 +850,6 @@ Format your output as clean HTML structure inside individual cabinet folder bloc
         const outputText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (!outputText) {
-            console.error("API response structure unexpected:", data);
             alert("Failed to generate response. The model returned an empty payload.");
             document.getElementById('uploadText').innerText = "Click or drag & drop worksheet image or PDF here";
             return;
@@ -904,7 +871,7 @@ Format your output as clean HTML structure inside individual cabinet folder bloc
         `;
 
         if (featureStates.scratchpad) {
-            document.body.classList.add('print-print-scratchpad-on');
+            document.body.classList.add('print-scratchpad-on');
             document.getElementById('scratchpadArea').style.display = 'block';
         } else {
             document.body.classList.remove('print-scratchpad-on');
