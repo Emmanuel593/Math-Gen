@@ -260,16 +260,6 @@
             color: #0f172a;
         }
 
-        .concept-map-card {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(14, 165, 233, 0.05));
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 15px;
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-
         .cabinet-folder {
             background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
             border: 2px solid #374151;
@@ -295,75 +285,10 @@
             margin-bottom: 8px;
         }
 
-        .problem-badge {
-            background: rgba(59, 130, 246, 0.15);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            padding: 10px 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            color: #93c5fd;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-            line-height: 1.3;
-        }
-
-        .pitfall-alert {
-            background: rgba(239, 68, 68, 0.15);
-            border-left: 4px solid #ef4444;
-            padding: 6px 10px;
-            border-radius: 0 6px 6px 0;
-            margin-bottom: 8px;
-            color: #fca5a5;
-            font-size: 0.8rem;
-        }
-
-        .method-block, .verification-block {
-            background: rgba(16, 185, 129, 0.1);
-            border-left: 4px solid #10b981;
-            padding: 6px 10px;
-            border-radius: 0 6px 6px 0;
-            margin-bottom: 8px;
-            color: #a7f3d0;
-            font-size: 0.8rem;
-        }
-
         .folder-content {
-            font-size: 0.85rem;
-            line-height: 1.4;
+            font-size: 0.9rem;
+            line-height: 1.5;
             color: var(--text-primary);
-        }
-
-        .final-answer-box {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
-            border: 2px solid #10b981;
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 10px;
-            font-size: 1rem;
-            font-weight: 800;
-            color: #34d399;
-            text-align: center;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-
-        .quiz-hidden .final-answer-box {
-            filter: blur(8px);
-            user-select: none;
-            cursor: pointer;
-            position: relative;
-        }
-        .quiz-hidden .final-answer-box::after {
-            content: "Click to Reveal Answer";
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            color: #fff;
-            background: #10b981;
-            padding: 6px 14px;
-            border-radius: 8px;
-            filter: none;
-            font-size: 0.95rem;
         }
 
         .sticky-note-box {
@@ -464,8 +389,6 @@
             border-color: #000000 !important;
             box-shadow: none !important;
         }
-        body.eco-ink-mode .problem-badge { background: #f1f5f9 !important; color: #000 !important; border-color: #000 !important; }
-        body.eco-ink-mode .final-answer-box { background: #f8fafc !important; color: #000 !important; border: 2px solid #000 !important; }
 
         @media print {
             body { background: white !important; color: black !important; padding: 0 !important; }
@@ -493,23 +416,7 @@
                 margin-bottom: 12px !important;
             }
             .folder-tab { background: #2563eb !important; color: white !important; padding: 3px 10px !important; font-size: 0.8rem !important; font-weight: bold; }
-            .problem-badge { background-color: #f1f5f9 !important; color: #0f172a !important; border: 1.5px solid #cbd5e1 !important; padding: 8px !important; font-size: 0.9rem !important; margin-bottom: 8px !important; font-weight: bold; }
-            .pitfall-alert { background: #fef2f2 !important; border-left: 4px solid #dc2626 !important; color: #991b1b !important; padding: 6px 10px !important; font-weight: 600; }
-            .method-block, .verification-block { background: #ecfdf5 !important; border-left: 4px solid #059669 !important; color: #065f46 !important; padding: 6px 10px !important; font-weight: 600; }
-            .folder-content { font-size: 0.85rem !important; line-height: 1.4 !important; color: #1e293b !important; }
-            .final-answer-box { 
-                background-color: #ecfdf5 !important; 
-                border: 2px solid #059669 !important; 
-                color: #047857 !important; 
-                filter: none !important; 
-                padding: 8px !important;
-                margin-top: 8px !important;
-                font-size: 0.95rem !important;
-                font-weight: 900 !important;
-                page-break-inside: avoid !important; 
-                break-inside: avoid !important; 
-            }
-            .final-answer-box::after { display: none !important; }
+            .folder-content { font-size: 0.9rem !important; line-height: 1.4 !important; color: #1e293b !important; }
             .katex { color: black !important; }
         }
     </style>
@@ -629,7 +536,6 @@
             </div>
         </div>
 
-        <div id="conceptMapContainer"></div>
         <div id="cabinetFoldersContainer"></div>
 
         <div class="quick-cut-sheet" id="quickCutSheet">
@@ -854,8 +760,8 @@
         document.getElementById('lblClassName').innerText = "Algebra 2";
 
         const systemPrompt = `You are an expert Algebra 2 tutor and master study suite generator. 
-Solve the provided math problems clearly with 5th-grade friendly logic, step-by-step guidance, pitfall warnings, and verified final answers formatted using LaTeX ($...$ and $$...$$).
-Return your response structured as JSON or clearly formatted HTML blocks corresponding to concept maps and cabinet folders.`;
+Solve the provided math problems clearly with 5th-grade friendly logic, step-by-step guidance, pitfall warnings, and verified final answers formatted using LaTeX ($...$ and $$...$$). 
+Format your output as clean HTML structure inside a cabinet folder layout so it displays neatly.`;
 
         const contents = [];
         if (problemText) {
@@ -884,26 +790,32 @@ Return your response structured as JSON or clearly formatted HTML blocks corresp
             });
 
             const data = await response.json();
+
+            if (data.error) {
+                console.error("Gemini API Error:", data.error);
+                alert("API Error: " + (data.error.message || "Check your API key."));
+                return;
+            }
             
-            // Safe optional chaining to prevent 'Cannot read properties of undefined (reading '0')'
             const outputText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
             if (!outputText) {
                 console.error("API response structure unexpected:", data);
-                alert("Failed to generate response. Please check your API key or input format.");
+                alert("Failed to generate response. The model returned an empty payload.");
                 return;
             }
 
-            // Render into output containers
             document.getElementById('binderDividerPage').style.display = 'flex';
             document.getElementById('outputSection').style.display = 'block';
 
             const foldersContainer = document.getElementById('cabinetFoldersContainer');
+            let cleanedOutput = outputText.replace(/```html/g, '').replace(/```/g, '');
+
             foldersContainer.innerHTML = `
                 <div class="cabinet-folder">
                     <div class="folder-tab">Solution Output</div>
                     <div class="folder-content">
-                        ${outputText.replace(/\n/g, '<br>')}
+                        ${cleanedOutput}
                     </div>
                 </div>
             `;
@@ -929,7 +841,7 @@ Return your response structured as JSON or clearly formatted HTML blocks corresp
 
         } catch (err) {
             console.error("Fetch error:", err);
-            alert("Network or API error occurred. Check console for details.");
+            alert("Network error occurred. Check your connection.");
         }
     }
 </script>
