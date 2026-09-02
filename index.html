@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MathGen Elite - Algebra 2 Study Suite</title>
     
-    <!-- KaTeX for clean math rendering -->
+    <!-- KaTeX for clean math rendering and proper fraction stacks -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -240,6 +240,9 @@
 
         .output-section {
             display: none;
+            background: #ffffff !important;
+            color: #0f172a !important;
+            border: 2px solid #cbd5e1 !important;
         }
 
         .print-header-block {
@@ -261,13 +264,13 @@
         }
 
         .cabinet-folder {
-            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-            border: 2px solid #374151;
-            border-left: 6px solid #3b82f6;
+            background: #ffffff !important;
+            border: 1px solid #94a3b8 !important;
+            border-left: 6px solid #2563eb !important;
             border-radius: 10px;
-            padding: 14px;
+            padding: 16px;
             margin-bottom: 14px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             position: relative;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
@@ -275,7 +278,7 @@
 
         .folder-tab {
             display: inline-block;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            background: #2563eb;
             color: white;
             font-weight: 700;
             padding: 4px 10px;
@@ -286,9 +289,9 @@
         }
 
         .folder-content {
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: var(--text-primary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #0f172a !important;
         }
 
         .sticky-note-box {
@@ -385,14 +388,7 @@
         }
         .formula-sidebar.open { left: 0; }
 
-        body.eco-ink-mode .card, body.eco-ink-mode .cabinet-folder {
-            background: #ffffff !important;
-            color: #000000 !important;
-            border-color: #000000 !important;
-            box-shadow: none !important;
-        }
-
-        /* STRICT ANTI-BREAK PRINT ENGINE FIX */
+        /* STRICT PDF-LIKE PRINT & SCREEN CONTRAST ENGINE */
         @media print {
             @page {
                 size: letter;
@@ -418,6 +414,7 @@
                 border: none !important; 
                 box-shadow: none !important; 
                 background: white !important; 
+                color: black !important;
                 margin: 0 !important; 
                 padding: 0 !important; 
             }
@@ -454,10 +451,10 @@
                 margin-bottom: 12px !important;
             }
             
-            /* Prevent orphan line splitting inside notes and folders */
             .cabinet-folder p, .cabinet-folder div, .cabinet-folder ul, .cabinet-folder ol, .folder-content {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
+                color: black !important;
             }
 
             .folder-tab { 
@@ -470,9 +467,9 @@
             .folder-content { 
                 font-size: 9.5pt !important; 
                 line-height: 1.4 !important; 
-                color: #0f172a !important; 
+                color: black !important; 
             }
-            .katex { color: black !important; }
+            .katex, .katex-display { color: black !important; }
             
             .quick-cut-sheet, .scratchpad-area {
                 page-break-inside: avoid !important;
@@ -503,7 +500,7 @@
         <p>Algebra 2 Study Suite & Print Vault</p>
         <div class="dashboard-badge-row">
             <span class="dash-chip">✨ 5th-Grade Simple Explanations</span>
-            <span class="dash-chip">🎯 Zero-Orphan Print Engine</span>
+            <span class="dash-chip">🎯 Perfect PDF Fraction Rendering</span>
             <span class="dash-chip">⚡ Powered by Gemini 3.6 Flash</span>
         </div>
     </header>
@@ -583,7 +580,7 @@
 
     <div class="card output-section" id="outputSection">
         <div class="cabinet-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid var(--cabinet-gold); padding-bottom:10px; margin-bottom:20px;">
-            <h2 style="margin:0; color:var(--cabinet-gold);">Master Answer Cabinet</h2>
+            <h2 style="margin:0; color:#b45309;">Master Answer Cabinet</h2>
             <button class="btn-secondary" style="margin:0; background:#4b5563;" onclick="toggleFocusMode()" id="focusToggleBtn">Focus Mode</button>
         </div>
 
@@ -602,7 +599,7 @@
             <h3 style="margin-top:0; color:#065f46;">Quick-Cut Algebra 2 Formula Cards</h3>
             <p style="font-size:0.9rem; margin-bottom:15px;">Cut along dashed lines to keep these key formulas in your pocket.</p>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
-                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Quadratic Formula:</strong><br>$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$</div>
+                <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Quadratic Formula:</strong><br>$\dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a}$</div>
                 <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Vertex Form:</strong><br>$f(x) = a(x - h)^2 + k$</div>
                 <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Slope-Intercept:</strong><br>$y = mx + b$</div>
                 <div style="border:1px dashed #059669; padding:12px; border-radius:6px; background:#fff; color:#065f46;"><strong>Log Product Rule:</strong><br>$\log_b(xy) = \log_b x + \log_b y$</div>
@@ -820,7 +817,8 @@
         document.getElementById('lblClassName').innerText = "Algebra 2";
 
         const systemPrompt = `You are an expert Algebra 2 tutor and master study suite generator. 
-Solve the provided math problems clearly with 5th-grade friendly logic, step-by-step guidance, pitfall warnings, and verified final answers formatted using LaTeX ($...$ and $$...$$). 
+Solve the provided math problems clearly with 5th-grade friendly logic, step-by-step guidance, pitfall warnings, and verified final answers. 
+CRITICAL MATH FORMATTING RULE: Whenever you write fractions, you MUST use LaTeX display or inline fraction notation using \\dfrac{numerator}{denominator} or \\frac{numerator}{denominator} so they stack properly like a clean printed PDF textbook rather than messy inline text slashes. 
 Format your output as clean HTML structure inside individual cabinet folder blocks so each problem has its own independent card layout.`;
 
         const contents = [];
@@ -906,7 +904,7 @@ Format your output as clean HTML structure inside individual cabinet folder bloc
         `;
 
         if (featureStates.scratchpad) {
-            document.body.classList.add('print-scratchpad-on');
+            document.body.classList.add('print-print-scratchpad-on');
             document.getElementById('scratchpadArea').style.display = 'block';
         } else {
             document.body.classList.remove('print-scratchpad-on');
