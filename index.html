@@ -246,7 +246,6 @@
             padding: 30px;
         }
 
-        /* STUNNING GORGEOUS DEDICATED TITLE PAGE */
         .binder-title-page {
             border: 3px solid #0f172a;
             border-radius: 16px;
@@ -806,6 +805,14 @@
             return;
         }
 
+        // Check local cache first to avoid redundant API hits
+        const cacheKey = "math_cache_" + btoa(problemText).substring(0, 50);
+        const cachedResult = localStorage.getItem(cacheKey);
+        if (cachedResult && !uploadedFilePayload) {
+            displayResults(cachedResult);
+            return;
+        }
+
         const studentName = document.getElementById('studentName').value;
         const assignmentTitle = document.getElementById('assignmentTitle').value;
 
@@ -844,10 +851,10 @@ CRITICAL MATH FORMATTING RULE: Whenever you write fractions, you MUST use LaTeX 
         };
 
         const maxRetries = 5;
-        let delay = 2000; 
+        let delay = 6000; // Start with a safe 6s window to bypass rate limits smoothly
         let data = null;
 
-        document.getElementById('uploadText').innerText = "Connecting to Gemini (auto-retrying if busy)...";
+        document.getElementById('uploadText').innerText = "Connecting to Gemini (smart-retrying if limited)...";
 
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
             try {
@@ -861,8 +868,9 @@ CRITICAL MATH FORMATTING RULE: Whenever you write fractions, you MUST use LaTeX 
 
                 if (response.status === 429 || response.status === 503 || (data.error && (data.error.code === 429 || data.error.status === "RESOURCE_EXHAUSTED"))) {
                     if (attempt < maxRetries) {
+                        document.getElementById('uploadText').innerText = `Rate limited. Retrying in ${delay/1000}s (Attempt ${attempt}/${maxRetries})...`;
                         await new Promise(resolve => setTimeout(resolve, delay));
-                        delay *= 2; 
+                        delay *= 2; // Exponential backoff: 6s -> 12s -> 24s -> 48s
                         continue;
                     }
                 }
@@ -876,7 +884,7 @@ CRITICAL MATH FORMATTING RULE: Whenever you write fractions, you MUST use LaTeX 
 
         if (data?.error) {
             console.error("Gemini API Error:", data.error);
-            alert("API Error: " + (data.error.message || "Check your API key."));
+            alert("API Error: " + (data.error.message || "Check your API key. Rate limit reached—please wait a minute and try again."));
             document.getElementById('uploadText').innerText = "Click or drag & drop worksheet image or PDF here";
             return;
         }
@@ -889,12 +897,20 @@ CRITICAL MATH FORMATTING RULE: Whenever you write fractions, you MUST use LaTeX 
             return;
         }
 
-        document.getElementById('outputSection').style.display = 'block';
-
-        const studyGuideContainer = document.getElementById('studyGuideContent');
         let cleanedOutput = outputText.replace(/```html/g, '').replace(/```/g, '');
+        
+        // Save to cache
+        if (!uploadedFilePayload) {
+            localStorage.setItem(cacheKey, cleanedOutput);
+        }
 
-        studyGuideContainer.innerHTML = cleanedOutput;
+        displayResults(cleanedOutput);
+    }
+
+    function displayResults(htmlContent) {
+        document.getElementById('outputSection').style.display = 'block';
+        const studyGuideContainer = document.getElementById('studyGuideContent');
+        studyGuideContainer.innerHTML = htmlContent;
 
         if (featureStates.scratchpad) {
             document.body.classList.add('print-scratchpad-on');
