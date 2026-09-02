@@ -246,44 +246,91 @@
             padding: 30px;
         }
 
-        .print-header-block {
-            display: none;
-            border-bottom: 2px solid #0f172a;
-            padding-bottom: 12px;
+        /* STUNNING GORGEOUS DEDICATED TITLE PAGE */
+        .binder-title-page {
+            border: 3px solid #0f172a;
+            border-radius: 16px;
+            padding: 50px 40px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            page-break-after: always !important;
+            break-after: page !important;
+        }
+
+        .title-page-header {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #3b82f6;
+            font-weight: 800;
             margin-bottom: 20px;
-            background: #ffffff;
         }
 
-        .print-header-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 15px;
-            font-size: 0.95rem;
+        .title-page-main {
+            margin: auto 0;
+        }
+
+        .title-page-main h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
             color: #0f172a;
+            margin: 0 0 15px 0;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
         }
 
-        /* Seamless Unified Study Guide Flow (No choppy boxes/tabs) */
+        .title-page-main p {
+            font-size: 1.35rem;
+            color: #475569;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .title-page-footer {
+            border-top: 2px solid #cbd5e1;
+            padding-top: 25px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            font-size: 1.05rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
         .study-guide-document {
             font-size: 1rem;
             line-height: 1.6;
             color: #0f172a !important;
         }
 
-        .study-guide-document h3 {
-            margin-top: 25px;
-            margin-bottom: 10px;
-            font-size: 1.15rem;
-            color: #1e293b;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 6px;
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-
-        .study-guide-document p, .study-guide-document div {
-            margin-bottom: 10px;
-            page-break-inside: avoid;
-            break-inside: avoid;
+        .question-card-page {
+            border: 2px solid #334155;
+            border-radius: 10px;
+            padding: 28px;
+            margin-bottom: 25px;
+            background: #ffffff;
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            page-break-before: always !important;
+            break-before: page !important;
+            page-break-after: always !important;
+            break-after: page !important;
         }
 
         .sticky-note-box {
@@ -295,8 +342,8 @@
             font-size: 0.85rem;
             font-weight: 600;
             border: 1px solid #facc15;
-            page-break-inside: avoid;
-            break-inside: avoid;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
         }
 
         .scratchpad-area {
@@ -307,25 +354,8 @@
             margin-top: 20px;
             background: #ffffff;
             color: #000000;
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-
-        .divider-page {
-            display: none;
-            page-break-after: always;
-            height: 92vh;
-            border: 2px solid #cbd5e1;
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            background: #ffffff;
-            color: #0f172a;
-            box-sizing: border-box;
-            position: relative;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
         }
 
         .quick-cut-sheet {
@@ -336,8 +366,8 @@
             border-radius: 10px;
             background: #ffffff;
             color: #065f46;
-            page-break-inside: avoid;
-            break-inside: avoid;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
         }
 
         .formula-flyout-btn {
@@ -372,17 +402,16 @@
         }
         .formula-sidebar.open { left: 0; }
 
-        /* UNIFIED CLEAN PRINT ENGINE (Perfect for binder clips, zero border boxes) */
         @media print {
             @page {
                 size: letter;
-                margin: 0.5in;
+                margin: 0.4in;
             }
             body { 
                 background: white !important; 
                 color: black !important; 
                 padding: 0 !important; 
-                font-size: 10pt !important;
+                font-size: 11pt !important;
             }
             .container { 
                 max-width: 100% !important; 
@@ -390,7 +419,7 @@
                 padding: 0 !important; 
                 margin: 0 !important; 
             }
-            header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header, .formula-flyout-btn, .divider-page { 
+            header, .card:not(.output-section), .btn-primary, .action-row, .cabinet-header, .formula-flyout-btn { 
                 display: none !important; 
             }
             .output-section { 
@@ -402,27 +431,52 @@
                 margin: 0 !important; 
                 padding: 0 !important; 
             }
-            .print-header-block { 
-                display: block !important; 
-                border-bottom: 2px solid #000000 !important; 
-                background: #ffffff !important; 
-                margin-bottom: 15px !important;
-                padding-bottom: 8px !important;
-                page-break-inside: avoid !important;
-            }
             
             body.print-scratchpad-on .scratchpad-area { display: block !important; }
             body.print-scratchpad-off .scratchpad-area { display: none !important; }
             body.print-quickcut-on .quick-cut-sheet { display: block !important; }
             body.print-quickcut-off .quick-cut-sheet { display: none !important; }
             
-            .study-guide-document {
-                font-size: 10pt !important;
-                line-height: 1.45 !important;
+            .binder-title-page {
+                border: 3px solid #000000 !important;
+                background: #ffffff !important;
                 color: black !important;
+                height: 96vh !important;
+                max-height: 96vh !important;
+                padding: 40px !important;
+                box-sizing: border-box !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                margin-bottom: 0 !important;
             }
-            .study-guide-document h3 {
-                border-bottom: 1px solid #000 !important;
+
+            .binder-title-page h1 { color: black !important; }
+            .binder-title-page p { color: #333333 !important; }
+            .title-page-footer { border-top: 2px solid #000000 !important; color: black !important; }
+
+            .question-card-page {
+                border: 2px solid #000000 !important;
+                border-radius: 8px !important;
+                padding: 24px !important;
+                background: #ffffff !important;
+                color: black !important;
+                height: 96vh !important;
+                max-height: 96vh !important;
+                box-sizing: border-box !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                page-break-before: always !important;
+                break-before: page !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                margin-bottom: 0 !important;
+            }
+            
+            .study-guide-document {
+                font-size: 11pt !important;
+                line-height: 1.5 !important;
                 color: black !important;
             }
             .katex, .katex-display { color: black !important; }
@@ -481,8 +535,8 @@
             <div>
                 <label for="printDensity">Print Layout Density</label>
                 <select id="printDensity" onchange="applyDensityMode()">
-                    <option value="compact" selected>Compact (Optimized to Prevent Breaks)</option>
-                    <option value="standard">Standard Print Mode</option>
+                    <option value="compact">Compact (Optimized to Prevent Breaks)</option>
+                    <option value="standard" selected>Standard Print Mode (1 Question / Page)</option>
                     <option value="large">Large Print (High Legibility)</option>
                 </select>
             </div>
@@ -516,27 +570,22 @@
         <button class="btn-primary" onclick="solveProblemAI()">Open The Answer Cabinet & Build Study Suite</button>
     </div>
 
-    <div class="divider-page" id="binderDividerPage">
-        <h1 style="font-size: 3rem; margin:0 0 15px 0; color:#0f172a;" id="coverAssignmentTitle">Problem Set</h1>
-        <p style="font-size: 1.2rem; color:#475569; margin: 0 auto 30px auto;" id="coverSubtitleText">Crystal Clear Solutions & Step-by-Step Logic Vault</p>
-        <div style="font-weight: 600; color: #334155; font-size: 1rem;">
-            <span>Student: <strong id="coverStudentName">Mark</strong></span> | 
-            <span>Date: <strong id="coverDate"></strong></span>
-        </div>
-    </div>
-
     <div class="card output-section" id="outputSection">
         <div class="cabinet-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:20px;">
             <h2 style="margin:0; color:#0f172a;">Master Answer Cabinet</h2>
             <button class="btn-secondary" style="margin:0; background:#4b5563;" onclick="toggleFocusMode()" id="focusToggleBtn">Focus Mode</button>
         </div>
 
-        <div class="print-header-block" id="printHeaderBlock">
-            <div style="font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 4px;" id="lblAssignmentTitle"></div>
-            <div class="print-header-grid">
-                <div><strong>Name:</strong> <span id="lblStudentName"></span></div>
-                <div><strong>Class:</strong> <span id="lblClassName"></span></div>
-                <div><strong>Date:</strong> <span id="lblDate"></span></div>
+        <div class="binder-title-page" id="binderTitlePage">
+            <div class="title-page-header">Suncoast Academy • Verified Study Suite</div>
+            <div class="title-page-main">
+                <h1 id="coverAssignmentTitle">Problem Set 4</h1>
+                <p id="coverSubtitleText">Crystal-Clear Solutions & Step-by-Step Logic Vault</p>
+            </div>
+            <div class="title-page-footer">
+                <div>Student: <span id="coverStudentName" style="font-weight:800;">Mark</span></div>
+                <div>Course: <span style="font-weight:800;">Algebra 2</span></div>
+                <div>Date: <span id="coverDate" style="font-weight:800;"></span></div>
             </div>
         </div>
 
@@ -557,6 +606,7 @@
 
         <div class="action-row" style="margin-top:25px; display:flex; flex-wrap:wrap; gap:10px;">
             <button class="btn-secondary" style="background: #2563eb;" onclick="triggerPrint()">Print Study Guide</button>
+            <button class="btn-secondary" style="background: #4f46e5;" onclick="copyToClipboard()" id="copyClipboardBtn">📋 Copy Study Guide</button>
             <button class="btn-secondary" style="background: #059669;" onclick="exportAnkiCSV()">Export Anki CSV</button>
             <button class="btn-secondary" style="background: #7c3aed;" onclick="insertStickyNotePrompt()">Add Sticky Note</button>
             <button class="btn-secondary" style="background: #d97706;" onclick="toggleQuizMode()" id="quizModeBtn">Quiz Mode: OFF</button>
@@ -569,7 +619,6 @@
         const savedKey = localStorage.getItem('gemini_math_key');
         if (savedKey) document.getElementById('apiKeyInput').value = savedKey;
         const dateStr = new Date().toLocaleDateString();
-        document.getElementById('lblDate').innerText = dateStr;
         document.getElementById('coverDate').innerText = dateStr;
     }
 
@@ -642,17 +691,22 @@
 
     function applyDensityMode() {
         const mode = document.getElementById('printDensity').value;
-        const doc = document.getElementById('studyGuideContent');
-        if (mode === 'compact') {
-            doc.style.fontSize = '0.88rem';
-            doc.style.lineHeight = '1.45';
-        } else if (mode === 'large') {
-            doc.style.fontSize = '1.1rem';
-            doc.style.lineHeight = '1.7';
-        } else {
-            doc.style.fontSize = '1rem';
-            doc.style.lineHeight = '1.6';
-        }
+        const pages = document.querySelectorAll('.question-card-page');
+        pages.forEach(p => {
+            if (mode === 'compact') {
+                p.style.padding = '16px';
+                p.style.minHeight = '75vh';
+                p.style.fontSize = '0.9rem';
+            } else if (mode === 'large') {
+                p.style.padding = '32px';
+                p.style.minHeight = '90vh';
+                p.style.fontSize = '1.1rem';
+            } else {
+                p.style.padding = '24px';
+                p.style.minHeight = '85vh';
+                p.style.fontSize = '1rem';
+            }
+        });
     }
 
     let quizModeActive = false;
@@ -681,11 +735,24 @@
         }
     }
 
+    function copyToClipboard() {
+        const content = document.getElementById('studyGuideContent').innerText;
+        navigator.clipboard.writeText(content).then(() => {
+            const btn = document.getElementById('copyClipboardBtn');
+            const originalText = btn.innerText;
+            btn.innerText = "✅ Copied to Clipboard!";
+            setTimeout(() => { btn.innerText = originalText; }, 2500);
+        }).catch(err => {
+            alert("Failed to copy text: " + err);
+        });
+    }
+
     function insertStickyNotePrompt() {
         const noteText = prompt("Enter your personal sticky note / reminder for this session:");
         if (noteText) {
-            const target = document.getElementById('studyGuideContent');
-            if (target) {
+            const pages = document.querySelectorAll('.question-card-page');
+            if (pages.length > 0) {
+                const target = pages[0];
                 let noteBox = target.querySelector('.sticky-note-box');
                 if (!noteBox) {
                     noteBox = document.createElement('div');
@@ -698,13 +765,16 @@
     }
 
     function exportAnkiCSV() {
-        const target = document.getElementById('studyGuideContent');
-        if (!target || target.innerHTML.trim() === "") {
+        const pages = document.querySelectorAll('.question-card-page');
+        if (pages.length === 0) {
             alert("No problems generated yet to export!");
             return;
         }
         let csvContent = "data:text/csv;charset=utf-8,Front,Back\n";
-        csvContent += `"Algebra 2 Problem Set","${target.innerText.replace(/"/g, '""').substring(0, 100)}..."\n`;
+        pages.forEach(p => {
+            const textContent = p.innerText.replace(/"/g, '""');
+            csvContent += `"Algebra 2 Question","${textContent.substring(0, 120)}..."\n`;
+        });
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
@@ -741,14 +811,18 @@
 
         document.getElementById('coverStudentName').innerText = studentName;
         document.getElementById('coverAssignmentTitle').innerText = assignmentTitle;
-        document.getElementById('lblStudentName').innerText = studentName;
-        document.getElementById('lblAssignmentTitle').innerText = assignmentTitle;
-        document.getElementById('lblClassName').innerText = "Algebra 2";
 
         const systemPrompt = `You are an expert Algebra 2 tutor and master study suite generator. 
-Solve the provided math problems clearly, naturally, and directly. Provide the full problem statement, clear step-by-step working logic without any meta-talk or referencing any internal system instructions or grade levels, and the verified final answer. 
-CRITICAL MATH FORMATTING RULE: Whenever you write fractions, you MUST use LaTeX display or inline fraction notation using \\dfrac{numerator}{denominator} or \\frac{numerator}{denominator} so they stack properly like a clean printed PDF textbook rather than messy inline text slashes. 
-Format your output as clean, unified HTML text flow with clean headings and step breakdowns suitable for a continuous printed master study guide.`;
+Solve the provided math problems clearly, naturally, and directly. Provide the full problem statement, clear step-by-step working logic without any meta-talk or referencing any internal system instructions or grade levels, and the verified final answer directly. 
+CRITICAL STRICT ENFORCEMENT FOR PRINTING: You MUST wrap EACH individual question and its complete step-by-step solution inside its own dedicated HTML block exactly like this:
+<div class="question-card-page">
+    <h3>Question X</h3>
+    <p><strong>Problem:</strong> [Problem Statement]</p>
+    <p><strong>Solution & Explanation:</strong> [Step-by-step logic]</p>
+    <p><strong>Final Answer:</strong> [Verified Answer]</p>
+</div>
+Every single question must have its own standalone <div class="question-card-page"> container so that when printed, each question occupies its own independent, clean, congruent page with zero overlapping or broken spilling onto other pages.
+CRITICAL MATH FORMATTING RULE: Whenever you write fractions, you MUST use LaTeX display or inline fraction notation using \\dfrac{numerator}{denominator} or \\frac{numerator}{denominator} so they stack properly like a clean printed PDF textbook rather than messy inline text slashes.`;
 
         const contents = [];
         if (problemText) {
@@ -815,7 +889,6 @@ Format your output as clean, unified HTML text flow with clean headings and step
             return;
         }
 
-        document.getElementById('binderDividerPage').style.display = 'flex';
         document.getElementById('outputSection').style.display = 'block';
 
         const studyGuideContainer = document.getElementById('studyGuideContent');
