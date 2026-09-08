@@ -957,8 +957,8 @@ CRITICAL MATH FORMATTING RULE: Whenever you write fractions, you MUST use LaTeX 
         outputSection.style.display = 'block';
         studyGuideContent.innerHTML = `<div style="text-align:center; padding: 40px; color:#475569;">Generating Answer Cabinet & Rendering Coordinate Planes...</div>`;
 
-        // 3 Free-tier Flash options tried in sequence automatically as failovers
-        const freeFlashModels = ['gemini-3.7-flash', 'gemini-3.8-flash', 'gemini-2.5-flash'];
+        // Validated active free-tier flash fallback options
+        const freeFlashModels = ['gemini-3.7-flash', 'gemini-3.8-flash', 'gemini-3.6-flash'];
         let success = false;
         let lastError = null;
 
@@ -991,7 +991,7 @@ CRITICAL MATH FORMATTING RULE: Whenever you write fractions, you MUST use LaTeX 
                     renderMathOnScreen();
                     outputSection.scrollIntoView({ behavior: 'smooth' });
                     success = true;
-                    break; // Exit loop on successful generation
+                    break;
                 } else {
                     throw new Error("Invalid response format received from Gemini API.");
                 }
